@@ -1,6 +1,3 @@
-# find way for file to auto close
-# if user quits out unexpextedly
-
 class Chat
 	attr_accessor :messages
 
@@ -23,7 +20,7 @@ class Chat
 	def append_to_txt_file(message)
 		# Move Cursor Back to End of File
 		@messages.seek(-2, IO::SEEK_END)
-		# adds to txt file
+		# appends to txt file
 		@messages.puts("#{Time.now} - #{message}")
 		# Rewind file to read from beginning
 		@messages.rewind
