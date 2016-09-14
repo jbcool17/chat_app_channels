@@ -26,20 +26,16 @@ class Chat
 	end
 
 	def append_to_txt_file(message)
+		# Move Cursor Back to End of File
+		@messages.seek(-2, IO::SEEK_END)
 		# adds to txt file
 		@messages.puts("#{Time.now} - #{message}")
+		# Rewind file to read from beginning
+		@messages.rewind
 	end
 
 	def read_file
-		# Rewind file to read from beginning
-		@messages.rewind
-		
-		output = File.read(@messages)
-
-		# Move Cursor Back to End of File
-		@messages.seek(-2, IO::SEEK_END)
-
-		output
+		File.read(@messages)
 	end
 
 	def generate_csv

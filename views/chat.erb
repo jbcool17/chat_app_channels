@@ -1,11 +1,14 @@
 <h1>Chat App</h1>
 
 <ul>
-	<li>List with Timestamps:Name:Message</li>
+	<% @test.each do |message| %>
+		<li><%= message %></li>
+	<% end %>
 
 </ul>
 <p>Message Window<p>
 <p>BUTTON - Send a Message</p>
 <a href='/'>Go Back</a>
 
-<%= @test %>
+
+<p><%= @test %></p>
