@@ -1,14 +1,27 @@
 <h1>Chat App</h1>
 
 <ul>
-	<% @test.each do |message| %>
+	<% @chat.each do |message| %>
 		<li><%= message %></li>
 	<% end %>
 
 </ul>
-<p>Message Window<p>
-<p>BUTTON - Send a Message</p>
+
+<hr>
+
+<form action="/message" method="post">
+  <input id="text_input" type="text" name="message">
+  <input type="submit">
+</form>
+
+<hr>
+
 <a href='/'>Go Back</a>
 
 
-<p><%= @test %></p>
+<script>
+	var input = document.getElementById('text_input');
+
+	input.focus();
+	input.select();
+</script>

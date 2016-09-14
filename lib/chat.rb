@@ -5,13 +5,7 @@ class Chat
 	attr_accessor :messages
 
 	def initialize
-		# if File.file?('messages.txt')
-		# 	@messages = open_txt_file
-		# else
-		# 	@messages = create_txt_file
-		# end
 		@messages = File.file?('messages.txt') ? open_txt_file : create_txt_file
-		
 	end
 
 	def create_txt_file

@@ -7,9 +7,16 @@ get '/' do
 end
 
 get '/chat' do
-	#'This is a chat.'
-	@test = Chat.new.read_file.split("\n")
+	# create method in class to parse
+	@chat = Chat.new.read_file.split("\n")
 	erb :chat
 end
 
+
+post '/message' do
+
+	Chat.new.append_to_txt_file "post test - #{params[:message]}"
+
+	redirect '/chat'
+end
 
