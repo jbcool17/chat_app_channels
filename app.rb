@@ -6,17 +6,22 @@ get '/' do
 	erb :index
 end
 
-get '/chat' do
+post '/user' do
+	redirect "/chat/#{params[:user]}"
+end
+
+get '/chat/:user' do
 	# create method in class to parse
+	@user = params[:user]
 	@chat = Chat.new.read_file.split("\n")
 	erb :chat
 end
 
 
-post '/message' do
+post '/:user/message' do
+	# Executing chat
+	Chat.new.append_to_txt_file "#{params[:user]}: #{params[:message]}"
 
-	Chat.new.append_to_txt_file "post test - #{params[:message]}"
-
-	redirect '/chat'
+	redirect "/chat/#{params[:user]}"
 end
 

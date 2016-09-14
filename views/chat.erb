@@ -1,5 +1,5 @@
 <h1>Chat App</h1>
-
+<p><%= @user %></p>
 <ul>
 	<% @chat.each do |message| %>
 		<li><%= message %></li>
@@ -9,9 +9,10 @@
 
 <hr>
 
-<form action="/message" method="post">
-  <input id="text_input" type="text" name="message">
-  <input type="submit">
+<form action="/<%= @user %>/message" method="post">
+	<label for="message">MESSAGE: </label>
+	<input id="message" type="text" name="message">
+  	<input type="submit">
 </form>
 
 <hr>
@@ -20,8 +21,9 @@
 
 
 <script>
-	var input = document.getElementById('text_input');
+	var messageInput = document.getElementById('message');
 
-	input.focus();
-	input.select();
+	messageInput.focus();
+	messageInput.select();
+	
 </script>
