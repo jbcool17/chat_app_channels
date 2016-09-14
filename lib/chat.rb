@@ -11,6 +11,7 @@ class Chat
 	def create_txt_file
 		file = File.new('messages.txt', 'w+')
 		file.puts "#{Time.now} - Start of Chat"
+		file.rewind
 
 		file
 	end
