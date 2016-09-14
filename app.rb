@@ -6,7 +6,8 @@ get '/' do
 end
 
 get '/chat' do
-	'This is a chat.'
+	#'This is a chat.'
+	erb :chat
 end
 
 
