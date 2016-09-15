@@ -16,24 +16,24 @@ module App
 			csv
 		end
 
-
 		def open_csv_file
 			CSV.open("messages.csv", "a+")
 		end
 
-		def add_to_csv(user, message)
+		def write_to_csv(user, message)
+			# Seeks end of file
 			@messages.seek(-2, IO::SEEK_END)
+			# Write to CSV
 			@messages << [ Time.now, user, message]
+			# Rewind file for display
 			@messages.rewind
 		end
 
+		# Parse CSV to array of hashes
 		def parse_csv
-
 			data = CSV.read(@messages.path,  { encoding: "UTF-8", headers: true, header_converters: :symbol, converters: :all})
 
-			hashed_data = data.map { |d| d.to_hash }
-
-			hashed_data
+			data.map { |d| d.to_hash }
 		end
 
 	end

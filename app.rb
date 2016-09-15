@@ -13,22 +13,23 @@ end
 
 # GET FOR USER
 get '/user' do
-	chatter.add_to_csv params[:user], "JOINED THE CHANNEL"
-	redirect "/chat/#{params[:user]}"
+	chatter.write_to_csv "STATUS", "#{params[:user].strip.upcase} HAS JOINED THE CHANNEL"
+
+	redirect "/chat/#{params[:user].strip}"
 end
 
-# CHAT APP
+# CHAT per User
 get '/chat/:user' do
-	# create method in class to parse
-	@user = params[:user]
+	@user = params[:user].strip
 	@chat = chatter.parse_csv
+
 	erb :chat
 end
 
 # CHAT POST METHOD - WITH USER
 post '/:user/message' do
 	# Executing chat
-	chatter.add_to_csv params[:user], params[:message]
+	chatter.write_to_csv params[:user], params[:message].strip
 
 	redirect "/chat/#{params[:user]}"
 end

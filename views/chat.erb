@@ -3,7 +3,7 @@
 
 <ul class="chat-window list-group">
 	<% @chat.each do |row| %>
-		<li><%= row[:date] %> | <%= row[:user] %> | <%= row[:message] %></li>
+		<li><%= row[:date] %> | <%= row[:user] %>: <%= row[:message] %></li>
 	<% end %>
 
 </ul>
