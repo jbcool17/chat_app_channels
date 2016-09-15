@@ -1,9 +1,9 @@
 
-<p>You are <strong><%= @user %></strong></p>
+<h3>Hello <strong><%= @user %></strong>!</h3>
 
 <ul class="chat-window list-group">
-	<% @chat.each do |message| %>
-		<li><%= message %></li>
+	<% @chat.each do |row| %>
+		<li><%= row[:date] %> | <%= row[:user] %> | <%= row[:message] %></li>
 	<% end %>
 
 </ul>

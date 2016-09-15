@@ -1,44 +1,40 @@
-class Chat
-	attr_accessor :messages
+require 'csv'
 
-	def initialize
-		@messages = File.file?('messages.txt') ? open_txt_file : create_txt_file
-	end
+module App
+	class Chat
+		attr_accessor :messages
 
-	def create_txt_file
-		file = File.new('messages.txt', 'w+')
-		file.puts "#{Time.now} - Start of Chat"
-		file.rewind
+		def initialize
+			@messages = File.file?('messages.csv') ? open_csv_file : create_csv_file
+		end
 
-		file
-	end
+		def create_csv_file
+			csv = CSV.open("messages.csv", "a+")
+			csv << ["date", "user", "message"]
+			csv << [Time.now, "STATUS", "Chat has started"]
 
-	def open_txt_file
-		File.open('messages.txt', 'a+')
-	end
+			csv
+		end
 
-	def append_to_txt_file(message)
-		# Move Cursor Back to End of File
-		@messages.seek(-2, IO::SEEK_END)
-		# appends to txt file
-		@messages.puts("#{Time.now} - #{message}")
-		# Rewind file to read from beginning
-		@messages.rewind
-	end
 
-	def read_file
-		File.read(@messages)
-	end
+		def open_csv_file
+			CSV.open("messages.csv", "a+")
+		end
 
-	def generate_csv
-		'test'
-	end
+		def add_to_csv(user, message)
+			@messages.seek(-2, IO::SEEK_END)
+			@messages << [ Time.now, user, message]
+			@messages.rewind
+		end
 
-	def parse_csv
-		'test'
-	end
+		def parse_csv
 
-	def reset_txt_file
-		'test'
+			data = CSV.read(@messages.path,  { encoding: "UTF-8", headers: true, header_converters: :symbol, converters: :all})
+
+			hashed_data = data.map { |d| d.to_hash }
+
+			hashed_data
+		end
+
 	end
 end
