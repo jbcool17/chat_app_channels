@@ -12,7 +12,7 @@ get '/' do
 end
 
 # GET FOR USER
-get '/user' do
+post '/user' do
 	chatter.write_to_csv "STATUS", "#{params[:user].strip.upcase} HAS JOINED THE CHANNEL"
 
 	redirect "/chat/#{params[:user].strip}"
