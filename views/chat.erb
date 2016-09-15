@@ -1,7 +1,7 @@
-<h1>Chat App</h1>
+
 <p>You are <strong><%= @user %></strong></p>
 
-<ul>
+<ul class="chat-window list-group">
 	<% @chat.each do |message| %>
 		<li><%= message %></li>
 	<% end %>
@@ -13,7 +13,7 @@
 <form action="/<%= @user %>/message" method="post">
 	<label for="message">MESSAGE: </label>
 	<input id="message" type="text" name="message">
-  	<input type="submit">
+  	<input class="btn btn-sm btn-primary" type="submit">
 </form>
 
 <hr>
@@ -22,9 +22,9 @@
 
 
 <script>
-	var messageInput = document.getElementById('message');
-
-	messageInput.focus();
-	messageInput.select();
+	$('#message').focus();
+	$('#message').select();
+	// $('.chat-window').animate({ scrollTop: $('.chat-window').height() });
+	$('.chat-window').scrollTop($('.chat-window')[0].scrollHeight);
 	
 </script>

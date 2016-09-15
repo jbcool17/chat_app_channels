@@ -1,7 +1,7 @@
 require 'sinatra'
 require './lib/chat'
 
-
+set :public_folder, File.dirname(__FILE__) + '/static'
 # HOME PAGE
 get '/' do
 	erb :index

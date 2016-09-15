@@ -1,0 +1,8 @@
+.chat-window {
+	max-height: 300px;
+	overflow: scroll;
+}
+
+li:nth-child(even){
+	background-color: lightblue;
+}
