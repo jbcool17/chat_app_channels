@@ -2,4 +2,4 @@
 # start application - rackup
 
 require './app'
-run Sinatra::Application
+run Application
