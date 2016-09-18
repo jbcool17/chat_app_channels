@@ -6,7 +6,7 @@ class Application < Sinatra::Base
 
 	set :public_folder, File.dirname(__FILE__) + '/static'
 
-	# Initialize Chat Functionallity
+	# Initialize Chat Functionality
 	chatter = App::Chat.new
 
 	# HOME PAGE
@@ -14,7 +14,7 @@ class Application < Sinatra::Base
 		erb :index
 	end
 
-	# POST FOR USER - entering chat
+	# POST FOR USER Name - Entering Chat
 	post '/user' do
 		chatter.write_to_csv("STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
 
@@ -29,7 +29,7 @@ class Application < Sinatra::Base
 		erb :chat
 	end
 
-	# CHAT POST METHOD - with user
+	# CHAT POST METHOD
 	post '/:user/message' do
 		# Executing chat
 		chatter.write_to_csv(user_strong_params, message_strong_params)
@@ -48,6 +48,6 @@ class Application < Sinatra::Base
 	end
 	 
 	def html_safe(text)
-	  Rack::Utils.escape_html(text)
+		Rack::Utils.escape_html(text)
 	end
 end

@@ -24,7 +24,7 @@ module App
 			# Seeks end of file
 			@messages.seek(-2, IO::SEEK_END)
 			# Write to CSV
-			@messages << [ Time.now, user, message]
+			@messages << [Time.now, user, message]
 			# Rewind file for display
 			@messages.rewind
 		end
