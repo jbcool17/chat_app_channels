@@ -7,10 +7,10 @@ $ bundle install
 $ rackup
 ```
 
-## SPECS
+## SPECS & NOTES
 - ruby 2.3.0
 - sintra
-- Styles = Bootstrap/Jquery - CDN / Custom CSS
+- styles = Bootstrap/Jquery - CDN / Custom CSS
 - stores data via CSV
 - page updates when message is submited
 
