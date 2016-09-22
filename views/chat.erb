@@ -1,20 +1,13 @@
 
 <h3>Hello <strong><%= @user %></strong>!</h3>
 
-<ul class="chat-window list-group">
-	<% @chat.each do |row| %>
-		<li><%= row[:date] %> | <%= row[:user] %>: <%= row[:message] %></li>
-	<% end %>
-
-</ul>
+<div id="dump"></div>
 
 <hr>
 
-<form action="/<%= @user %>/message" method="post">
-	<label for="message">MESSAGE: </label>
-	<input id="message" type="text" name="message">
-  	<input class="btn btn-sm btn-primary" type="submit">
-</form>
+<label for="message">MESSAGE: </label>
+<input id="message" type="text" name="message">
+<input id="send_message" class="btn btn-sm btn-primary" type="submit">
 
 <hr>
 
@@ -22,9 +15,95 @@
 
 
 <script>
+	var appState = {
+		newCSVLength: 0,
+		oldCSVLength: 0,
+		current_data: 'not set',
+		count: 0
+
+	}
+	
+	readCSV();
+
 	$('#message').focus();
 	$('#message').select();
-	// $('.chat-window').animate({ scrollTop: $('.chat-window').height() });
-	$('.chat-window').scrollTop($('.chat-window')[0].scrollHeight);
+	$('#message').keypress(function (e) {
+	  if (e.which == 13) {
+		postToCSV($('#message').val());
+	    $('#message').val('');
+	    return false;    //<---- Add this line
+	  }
+	});
+
+	$("#send_message").click(function(){
+		postToCSV($('#message').val());
+		$('#message').val('');
+		return false;
+	});
+
+	setInterval(function(){ appendFromCSV();}, 1000);
+
+	function readCSV() {
+		$.ajax({
+		  url: '/messages.csv',
+		  dataType: 'text',
+		}).done(function(d){
+			appState.current_data = parseCSV(d);
+			
+			console.log('reading csv - CDL: ' + appState.newCSVLength + ' OCL: ' + appState.oldCSVLength);
+			
+			if (appState.newCSVLength === 0 ){
+				createList(d);
+				appState.newCSVLength = appState.current_data.length;
+				appState.oldCSVLength = appState.newCSVLength;
+			}
+
+			appState.newCSVLength = appState.current_data.length;
+
+			$("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
+		});
+	}
+
+	function createList(data){
+		var allRows = data.split(/\r?\n|\r/);
+		var list = '<ul class="chat-window list-group">';
+		for (var i = 0; i < allRows.length; i++){
+			list += '<li>' + allRows[i] + '</li>'
+		}
+
+		list += '</ul>'
+
+		$('#dump').append(list)	
+	}
+
+	function parseCSV(data) {
+		//creates array
+		return data.split(/\r?\n|\r/);
+	}
+
+	function appendFromCSV(){
+		readCSV();
+		if ( appState.newCSVLength > appState.oldCSVLength) {
+			console.log('appending...')
+			$('#dump > ul > li:last-child').after('<li>' + appState.count + appState.current_data[appState.current_data.length - 2] + '</li>');
+		  	$("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
+		  	appState.oldCSVLength += 1;
+		} else {
+			console.log('not gonna append.')
+		}
+	}
+
+	function postToCSV(text) {
+		$.ajax({
+		  type: "POST",
+		  url: "/<%= @user %>/message",
+		  data: {message: text}
+		}).done(function(d){
+			appState.oldCSVLength = appState.newCSVLength
+			console.log('posted to csv');
+		  	appState.count += 1;  	
+		});
+
+	}
 	
 </script>
