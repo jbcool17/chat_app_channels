@@ -5,33 +5,29 @@ module App
 		attr_accessor :messages
 
 		def initialize
-			@messages = File.file?('messages.csv') ? open_csv_file : create_csv_file
+			@file_path = 'static/messages.csv'
+			File.file?(@file_path) ? true : create_csv_file
+
 		end
 
 		def create_csv_file
-			csv = CSV.open("messages.csv", "a+")
+			csv = CSV.open(@file_path, "a+")
 			csv << ["date", "user", "message"]
 			csv << [Time.now, "STATUS", "Chat has started"]
 
-			csv
-		end
-
-		def open_csv_file
-			CSV.open("messages.csv", "a+")
+			csv.close
 		end
 
 		def write_to_csv(user, message)
-			# Seeks end of file
-			@messages.seek(-2, IO::SEEK_END)
+			csv = CSV.open(@file_path, "a+")
 			# Write to CSV
-			@messages << [Time.now, user, message]
-			# Rewind file for display
-			@messages.rewind
+			csv << [Time.now, user, message]
+			csv.close
 		end
 
 		# Parse CSV to array of hashes
 		def parse_csv
-			data = CSV.read(@messages.path,  { encoding: "UTF-8", headers: true, header_converters: :symbol, converters: :all})
+			data = CSV.read(@file_path,  { encoding: "UTF-8", headers: true, header_converters: :symbol, converters: :all})
 
 			data.map { |d| d.to_hash }
 		end
