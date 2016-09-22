@@ -2,9 +2,18 @@
 	height: 300px;
 	overflow: scroll;
 	background: rgb(250,250,250);
-    
+}
+
+#dump {
+	height: 300px;
+	overflow: scroll;
 }
 
 li:nth-child(even){
 	background-color: lightblue;
 }
+
+tr:nth-child(even){
+	background-color: lightblue;
+}
+
