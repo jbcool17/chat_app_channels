@@ -33,8 +33,6 @@ class Application < Sinatra::Base
 	post '/:user/message' do
 		# Executing chat
 		chatter.write_to_csv(user_strong_params, message_strong_params)
-
-		redirect "/chat/#{user_strong_params}"
 	end
 
 	private
