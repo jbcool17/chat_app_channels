@@ -23,10 +23,14 @@
 
 	}
 	
-	readCSV();
+	// Read CSV File first and Setup
+	readAndDisplayFromCSV();
 
+	// Setup
 	$('#message').focus();
 	$('#message').select();
+
+	// Send Message Functions
 	$('#message').keypress(function (e) {
 	  if (e.which == 13) {
 		postToCSV($('#message').val());
@@ -41,26 +45,51 @@
 		return false;
 	});
 
-	setInterval(function(){ appendFromCSV();}, 1000);
 
-	function readCSV() {
+	// Check csv for new data
+	setInterval(function(){ readAndDisplayFromCSV(); }, 1000);
+
+	function readAndDisplayFromCSV() {
 		$.ajax({
 		  url: '/messages.csv',
 		  dataType: 'text',
 		}).done(function(d){
+			// set current data to array
 			appState.current_data = parseCSV(d);
 			
-			console.log('reading csv - CDL: ' + appState.newCSVLength + ' OCL: ' + appState.oldCSVLength);
+			console.log('STATUS=> reading csv - CDL: ' + appState.newCSVLength + ' OCL: ' + appState.oldCSVLength);
 			
+			// If new, for first load
 			if (appState.newCSVLength === 0 ){
 				createList(d);
+				// set new to current length
 				appState.newCSVLength = appState.current_data.length;
+				// set old to new to not add any new data
 				appState.oldCSVLength = appState.newCSVLength;
+				// auto scroll
+				$("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
 			}
 
 			appState.newCSVLength = appState.current_data.length;
 
-			$("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
+			// FIND NEW MESSAGES AND APPEND THEM
+			if ( appState.newCSVLength > appState.oldCSVLength) {
+				console.log('STATUS=> appending...')
+
+				// Ques up messages so they don't go missing and get displayed in order
+				var diff = appState.newCSVLength - appState.oldCSVLength;
+				for (var i = 0; i < diff; i++ ){
+					$('#dump > ul > li:last-child').after('<li>' + appState.count
+					 + " : " + appState.current_data[appState.oldCSVLength - 1] 
+					 + '</li>');
+					appState.oldCSVLength += 1;
+					appState.count += 1;
+					$("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
+				}
+
+			} else {
+				console.log('STATUS=> not gonna append.')
+			}
 		});
 	}
 
@@ -81,18 +110,6 @@
 		return data.split(/\r?\n|\r/);
 	}
 
-	function appendFromCSV(){
-		readCSV();
-		if ( appState.newCSVLength > appState.oldCSVLength) {
-			console.log('appending...')
-			$('#dump > ul > li:last-child').after('<li>' + appState.count + appState.current_data[appState.current_data.length - 2] + '</li>');
-		  	$("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
-		  	appState.oldCSVLength += 1;
-		} else {
-			console.log('not gonna append.')
-		}
-	}
-
 	function postToCSV(text) {
 		$.ajax({
 		  type: "POST",
@@ -100,10 +117,24 @@
 		  data: {message: text}
 		}).done(function(d){
 			appState.oldCSVLength = appState.newCSVLength
-			console.log('posted to csv');
-		  	appState.count += 1;  	
+			console.log('STATUS=> posted to csv'); 	
 		});
 
 	}
+
+	// function appendFromCSV(){
+	// 	// Get latest data
+	// 	// sets current data
+	// 	readAndDisplayFromCSV();
+	// 	if ( appState.newCSVLength > appState.oldCSVLength) {
+	// 		console.log('appending...')
+	// 		// GET CURRENT - old length current poistion
+	// 		$('#dump > ul > li:last-child').after('<li>' + appState.count + appState.current_data[appState.current_data.length - 2] + '</li>');
+	// 	  	$("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
+	// 	  	appState.oldCSVLength += 1;
+	// 	} else {
+	// 		console.log('not gonna append.')
+	// 	}
+	// }
 	
 </script>
