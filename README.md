@@ -13,4 +13,4 @@ $ rackup
 - styles = Bootstrap/Jquery - CDN / Custom CSS
 - stores data via CSV
 - page updates when message is submited
-
+- started to work on live reload in branch: feature_live_reload
