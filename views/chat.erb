@@ -79,13 +79,25 @@
 				// Ques up messages so they don't go missing and get displayed in order
 				var diff = appState.newCSVLength - appState.oldCSVLength;
 				for (var i = 0; i < diff; i++ ){
-					$('#dump > ul > li:last-child').after('<li>' + appState.count
-					 + " : " + appState.current_data[appState.oldCSVLength - 1] 
-					 + '</li>');
+					//Setting up data
+					var rowArray = appState.current_data[appState.oldCSVLength - 1].split(',')
+
+					if ( rowArray[1] === "STATUS") {
+						$('#dump > ul > li:last-child').after('<li class="red">' + appState.count
+						 + " : " + rowArray[0] + ' | ' + rowArray[1] + ' : ' + rowArray[2]
+						 + '</li>');
+					} else {
+						$('#dump > ul > li:last-child').after('<li class="green">' + appState.count
+						 + " : " + rowArray[0] + ' | ' + rowArray[1] + ' : ' + rowArray[2]
+						 + '</li>');
+					}
+
+
 					appState.oldCSVLength += 1;
 					appState.count += 1;
-					$("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
+					
 				}
+				$("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
 
 			} else {
 				console.log('STATUS=> not gonna append.')
@@ -97,7 +109,13 @@
 		var allRows = data.split(/\r?\n|\r/);
 		var list = '<ul class="chat-window list-group">';
 		for (var i = 0; i < allRows.length; i++){
-			list += '<li>' + allRows[i] + '</li>'
+			var rowArray = allRows[i].split(',')
+
+			if ( rowArray[1] === "STATUS") {
+				list += '<li class="red">' + rowArray[0] + ' | ' + rowArray[1] + ' : ' + rowArray[2] + '</li>'
+			} else {
+				list += '<li class="green">' + rowArray[0] + ' | ' + rowArray[1] + ' : ' + rowArray[2] + '</li>'
+			}
 		}
 
 		list += '</ul>'
@@ -121,20 +139,5 @@
 		});
 
 	}
-
-	// function appendFromCSV(){
-	// 	// Get latest data
-	// 	// sets current data
-	// 	readAndDisplayFromCSV();
-	// 	if ( appState.newCSVLength > appState.oldCSVLength) {
-	// 		console.log('appending...')
-	// 		// GET CURRENT - old length current poistion
-	// 		$('#dump > ul > li:last-child').after('<li>' + appState.count + appState.current_data[appState.current_data.length - 2] + '</li>');
-	// 	  	$("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
-	// 	  	appState.oldCSVLength += 1;
-	// 	} else {
-	// 		console.log('not gonna append.')
-	// 	}
-	// }
 	
 </script>
