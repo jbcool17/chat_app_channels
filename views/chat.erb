@@ -119,7 +119,9 @@
 	}
 
 	function createLI(row, style){
-		return '<li class=' + style + '>' + row.date + ' | ' + row.user + ' : ' + row.message + '</li>'
+		var date = new Date(row.date).toString().split('GMT');
+
+		return '<li class=' + style + '>' + date[0] + ' | ' + row.user + ' : ' + row.message + '</li>'
 	}
 
 	function autoScroll(){
