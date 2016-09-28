@@ -78,25 +78,22 @@
 
 				// Ques up messages so they don't go missing and get displayed in order
 				var diff = appState.newCSVLength - appState.oldCSVLength;
+				
 				for (var i = 0; i < diff; i++ ){
 					//Setting up data
 					var  row = appState.current_data[appState.oldCSVLength]
 
 					if ( row.user === "STATUS") {
-						$('#dump > ul > li:last-child').after('<li class="red">' + appState.count
-						 + " : " + row.date + ' | ' + row.user + ' : ' + row.message
-						 + '</li>');
+						$('#dump > ul > li:last-child').after(createLI(row, 'red'));
 					} else {
-						$('#dump > ul > li:last-child').after('<li class="green">' + appState.count
-						 + " : " + row.date + ' | ' + row.user + ' : ' + row.message
-						 + '</li>');
+						$('#dump > ul > li:last-child').after(createLI(row, 'green'));
 					}
-
 
 					appState.oldCSVLength += 1;
 					appState.count += 1;
 					
 				}
+
 				autoScroll();
 
 			}
@@ -110,15 +107,19 @@
 			var row = allRows[i]
 
 			if ( row.user === "STATUS") {
-				list += '<li class="red">' + row.date + ' | ' + row.user + ' : ' + row.message + '</li>'
+				list += createLI(row, 'red')
 			} else {
-				list += '<li class="green">' + row.date + ' | ' + row.user + ' : ' + row.message + '</li>'
+				list += createLI(row, 'green')
 			}
 		}
 
 		list += '</ul>'
 
 		$('#dump').append(list)	
+	}
+
+	function createLI(row, style){
+		return '<li class=' + style + '>' + row.date + ' | ' + row.user + ' : ' + row.message + '</li>'
 	}
 
 	function autoScroll(){
