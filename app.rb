@@ -35,6 +35,11 @@ class Application < Sinatra::Base
 		chatter.write_to_csv(user_strong_params, message_strong_params)
 	end
 
+	# GET MESSAGES via JSON
+	get '/messages' do
+		json chatter.parse_csv;
+	end
+
 	private
 	# Cleaning Up User Input
 	def user_strong_params
