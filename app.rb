@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/contrib'
 require './lib/chat'
 
 
@@ -37,7 +38,7 @@ class Application < Sinatra::Base
 
 	# GET MESSAGES via JSON
 	get '/messages' do
-		json chatter.parse_csv;
+		json chatter.parse_csv
 	end
 
 	private
