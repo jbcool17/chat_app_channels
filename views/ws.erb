@@ -1,0 +1,129 @@
+
+     <h1>Simple Echo & Chat Server</h1>
+     
+     <div id="msgs"></div>
+     <h3>Hello <strong><%= @user %></strong>!</h3>
+
+    <div id="dump"></div>
+
+    <hr>
+<form id="form">
+    <label for="message">MESSAGE: </label>
+    <input type="text" id="input" name="message" placeholder="send a message"></input>
+    <input id="send_message" class="btn btn-sm btn-primary" type="submit">
+</form>
+    <hr>
+
+    <a href='/'>Go Back to Home</a>
+<script>
+  var ws = new WebSocket('ws://' + window.location.host + window.location.pathname);
+  ws.onopen    = function()  { $('#msgs').html('CHAT-STATUS: websocket opened'); };
+  ws.onclose   = function()  { $('#msgs').html('CHAT-STATUS: websocket closed mate'); }
+  ws.onmessage = function(row) { 
+      // if ( row.user === "STATUS") {
+      //   $('#dump > ul > li:last-child').after(createLI(row, 'red'));
+      // } else {
+      //   $('#dump > ul > li:last-child').after(createLI(row, 'green'));
+      // }    
+      console.log('on message run...')
+      $('#msgs').html('CHAT-STATUS: websocket messaged: ' + row.data);
+      console.log(row)
+  };
+  var dogs;
+  function postToCSV(text) {
+    var data = {date: Date(), user: 'john', message: text}
+    dogs = data;
+    // var a = dogs.date +','+ dogs.user +','+ dogs.message
+    // a.split(',')
+    $.ajax({
+      type: "POST",
+      url: "/john/message",
+      data: data
+    }).done(function(){
+      appState.oldCSVLength = appState.newCSVLength
+      console.log('STATUS=> posted to csv'); 
+      // ws.onmessage(data);
+      ws.send(data.message); 
+    });
+
+    
+    autoScroll();
+  }
+
+  var appState = {
+    newCSVLength: 0,
+    oldCSVLength: 0,
+    current_data: 'not set',
+    count: 0
+
+  }
+  
+  // Read CSV File first and Setup
+  readAndDisplayFromCSV();
+
+  // Setup
+  $('#message').focus();
+  $('#message').select();
+
+  // Send Message Functions
+  $('#message').keypress(function (e) {
+    if (e.which == 13) {
+    postToCSV($('#input').val());
+      $('#input').val('');
+      return false;
+    }
+  });
+
+  $("#send_message").click(function(){
+    postToCSV($('#input').val());
+    $('#input').val('');
+    return false;
+  });
+
+
+  // Check csv for new data
+  // setInterval(function(){ readAndDisplayFromCSV(); }, 1000);
+
+  function readAndDisplayFromCSV() {
+    $.ajax({
+      url: '/messages',
+      dataType: 'json',
+    }).done(function(d){
+      // set current data to array
+      // appState.current_data = d;
+      
+      createList(d);
+      autoScroll();
+
+      })
+  };
+
+  function createList(data){
+    var allRows = data;
+    var list = '<ul id="msgs" class="chat-window list-group">';
+    for (var i = 0; i < allRows.length; i++){
+      var row = allRows[i]
+
+      if ( row.user === "STATUS") {
+        list += createLI(row, 'red')
+      } else {
+        list += createLI(row, 'green')
+      }
+    }
+
+    list += '</ul>'
+
+    $('#dump').append(list) 
+  }
+
+  function createLI(row, style){
+    var date = new Date(row.date).toString().split('GMT');
+
+    return '<li class=' + style + '>' + date[0] + ' | ' + row.user + ' : ' + row.message + '</li>'
+  }
+
+  function autoScroll(){
+    $("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
+  }
+  
+</script>

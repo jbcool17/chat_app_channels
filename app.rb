@@ -1,14 +1,69 @@
 require 'sinatra'
 require 'sinatra/contrib'
 require './lib/chat'
+require 'sinatra-websocket'
+
+
 
 
 class Application < Sinatra::Base
 
+	set :server, 'thin'
+	set :sockets, []
 	set :public_folder, File.dirname(__FILE__) + '/static'
+
 
 	# Initialize Chat Functionality
 	chatter = App::Chat.new
+
+	# get '/wsalso' do
+	#   if !request.websocket?
+	#   	puts "WHAT HAPPENED"
+	#     erb :wsalso
+	#   else
+	#     request.websocket do |ws|
+	#       ws.onopen do
+	#       	puts "OPEN"
+	#         ws.send("Hello World!")
+	#         settings.sockets << ws
+	#       end
+	#       ws.onmessage do |msg|
+	#       	puts "MESS"
+	#         EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+	#       end
+	#       ws.onclose do
+	#       	puts "CLOSEED MATE"
+	#         warn("websocket closed...")
+	#         settings.sockets.delete(ws)
+	#       end
+	#     end
+	#   end
+	# end
+
+	get '/ws' do
+	  if !request.websocket?
+	  	puts "WHAT HAPPENED"
+	    erb :ws
+	  else
+	    request.websocket do |ws|
+	      ws.onopen do
+	      	puts "OPEN"
+	        settings.sockets << ws
+	        ws.send("Hello World!")
+	      end
+
+	      ws.onmessage do |msg|
+	      	puts "MESSAGE SENDING...MATE #{msg}"
+	        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+	      end
+	      
+	      ws.onclose do
+	        warn("websocket closed...")
+	        settings.sockets.delete(ws)
+	      end
+	    end
+	  end
+	end
 
 	# HOME PAGE
 	get '/' do
