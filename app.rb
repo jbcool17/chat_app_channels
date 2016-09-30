@@ -16,47 +16,24 @@ class Application < Sinatra::Base
 	# Initialize Chat Functionality
 	chatter = App::Chat.new
 
-	# get '/wsalso' do
-	#   if !request.websocket?
-	#   	puts "WHAT HAPPENED"
-	#     erb :wsalso
-	#   else
-	#     request.websocket do |ws|
-	#       ws.onopen do
-	#       	puts "OPEN"
-	#         ws.send("Hello World!")
-	#         settings.sockets << ws
-	#       end
-	#       ws.onmessage do |msg|
-	#       	puts "MESS"
-	#         EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
-	#       end
-	#       ws.onclose do
-	#       	puts "CLOSEED MATE"
-	#         warn("websocket closed...")
-	#         settings.sockets.delete(ws)
-	#       end
-	#     end
-	#   end
-	# end
-
-	get '/ws' do
+	get '/ws/:user' do
+		@user = user_strong_params
 	  if !request.websocket?
-	  	puts "WHAT HAPPENED"
 	    erb :ws
 	  else
 	    request.websocket do |ws|
 	      ws.onopen do
-	      	puts "OPEN"
 	        settings.sockets << ws
-	        ws.send("Hello World!")
 	      end
 
 	      ws.onmessage do |msg|
-	      	puts "MESSAGE SENDING...MATE #{msg}"
+	      	chatter.write_to_csv(msg.split(',')[0], @user, html_safe(msg.split(',')[2]).strip)
+	      	
+	      	# cleaning up for sockets 
+	      	msg = [msg.split(',')[0], msg.split(',')[1], html_safe(msg.split(',')[2]).strip].join(',')
 	        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
 	      end
-	      
+
 	      ws.onclose do
 	        warn("websocket closed...")
 	        settings.sockets.delete(ws)
@@ -73,7 +50,6 @@ class Application < Sinatra::Base
 	# POST FOR USER Name - Entering Chat
 	post '/user' do
 		chatter.write_to_csv("STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
-
 		redirect "/chat/#{user_strong_params}"
 	end
 
@@ -88,7 +64,7 @@ class Application < Sinatra::Base
 	# CHAT POST METHOD
 	post '/:user/message' do
 		# Executing chat
-		chatter.write_to_csv(user_strong_params, message_strong_params)
+		chatter.write_to_csv(Time.now, user_strong_params, message_strong_params)
 	end
 
 	# GET MESSAGES via JSON

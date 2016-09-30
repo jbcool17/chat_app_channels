@@ -16,47 +16,25 @@
 
     <a href='/'>Go Back to Home</a>
 <script>
+$(document).ready(function(){
+  
+  // WEBSOCKET
   var ws = new WebSocket('ws://' + window.location.host + window.location.pathname);
-  ws.onopen    = function()  { $('#msgs').html('CHAT-STATUS: websocket opened'); };
-  ws.onclose   = function()  { $('#msgs').html('CHAT-STATUS: websocket closed mate'); }
-  ws.onmessage = function(row) { 
-      // if ( row.user === "STATUS") {
-      //   $('#dump > ul > li:last-child').after(createLI(row, 'red'));
-      // } else {
-      //   $('#dump > ul > li:last-child').after(createLI(row, 'green'));
-      // }    
+  ws.onopen    = function()  { $('#msgs').html('CHAT-STATUS: websocket opened'); }
+  ws.onclose   = function()  { $('#msgs').html('CHAT-STATUS: websocket closed'); }
+  ws.onmessage = function(data) {
+      var array = data.data.split(',')
+      var row = {date: array[0], user: array[1], message: array[2]}
+      if ( row.user === "STATUS") {
+        $('#dump > ul > li:last-child').after(createLI(row, 'red'));
+      } else {
+        $('#dump > ul > li:last-child').after(createLI(row, 'green'));
+      }    
       console.log('on message run...')
-      $('#msgs').html('CHAT-STATUS: websocket messaged: ' + row.data);
-      console.log(row)
+      // $('#msgs').html('CHAT-STATUS: websocket messaged: ' + row.message);
+      // console.log(row)
+      autoScroll();
   };
-  var dogs;
-  function postToCSV(text) {
-    var data = {date: Date(), user: 'john', message: text}
-    dogs = data;
-    // var a = dogs.date +','+ dogs.user +','+ dogs.message
-    // a.split(',')
-    $.ajax({
-      type: "POST",
-      url: "/john/message",
-      data: data
-    }).done(function(){
-      appState.oldCSVLength = appState.newCSVLength
-      console.log('STATUS=> posted to csv'); 
-      // ws.onmessage(data);
-      ws.send(data.message); 
-    });
-
-    
-    autoScroll();
-  }
-
-  var appState = {
-    newCSVLength: 0,
-    oldCSVLength: 0,
-    current_data: 'not set',
-    count: 0
-
-  }
   
   // Read CSV File first and Setup
   readAndDisplayFromCSV();
@@ -88,14 +66,10 @@
     $.ajax({
       url: '/messages',
       dataType: 'json',
-    }).done(function(d){
-      // set current data to array
-      // appState.current_data = d;
-      
-      createList(d);
+    }).done(function(data){
+      createList(data);
       autoScroll();
-
-      })
+    })
   };
 
   function createList(data){
@@ -125,5 +99,14 @@
   function autoScroll(){
     $("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
   }
-  
+
+  function postToCSV(text) {
+    var user = "<%= @user %>"
+    var data = {date: Date(), user: user, message: text}
+    
+    console.log('STATUS=> triggering sockets...')
+    ws.send([data.date,data.user,data.message].join(',')); 
+    autoScroll();
+  }
+});
 </script>

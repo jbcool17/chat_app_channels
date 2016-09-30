@@ -18,10 +18,10 @@ module App
 			csv.close
 		end
 
-		def write_to_csv(user, message)
+		def write_to_csv(time, user, message)
 			csv = CSV.open(@file_path, "a+")
 			# Write to CSV
-			csv << [Time.now, user, message]
+			csv << [time, user, message]
 			csv.close
 		end
 
