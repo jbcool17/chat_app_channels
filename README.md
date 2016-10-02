@@ -13,4 +13,5 @@ $ rackup
 - styles = Bootstrap/Jquery - CDN / Custom CSS
 - stores data via CSV
 - page updates when message is submited
-- started to work on live reload in branch: feature_live_reload
+- started to work on manual_reload/live_reload/websockets: needs clean up/bug fixes
+- getting ready for heroku deploy in feature/production branches
