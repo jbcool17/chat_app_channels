@@ -130,7 +130,7 @@
 	function postToCSV(text) {
 		$.ajax({
 		  type: "POST",
-		  url: "/<%= @user %>/message",
+		  url: "/lr/<%= @user %>/message",
 		  data: {message: text}
 		}).done(function(d){
 			appState.oldCSVLength = appState.newCSVLength
