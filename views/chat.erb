@@ -51,7 +51,7 @@
 
 	function readAndDisplayFromCSV() {
 		$.ajax({
-		  url: '/messages',
+		  url: '/messages/live_reload',
 		  dataType: 'json',
 		}).done(function(d){
 			// set current data to array

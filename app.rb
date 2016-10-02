@@ -11,13 +11,14 @@ class Application < Sinatra::Base
 
 
 	# Initialize Chat Functionality
-	chatter = App::Chat.new
+	ws_chatter = App::Chat.new("websockets")
+	lr_chatter = App::Chat.new("live_reload")
 
 
 	# WEBSOCKETS
 	# User enters ws chat
 	post '/ws' do
-		chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
+		ws_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
 		redirect "/ws/#{user_strong_params}"
 	end
 
@@ -34,7 +35,7 @@ class Application < Sinatra::Base
 	      end
 
 	      ws.onmessage do |msg|
-	      	chatter.write_to_csv(msg.split(',')[0], @user, html_safe(msg.split(',')[2]).strip)
+	      	ws_chatter.write_to_csv(msg.split(',')[0], @user, html_safe(msg.split(',')[2]).strip)
 	      	
 	      	# cleaning up for sockets 
 	      	msg = [msg.split(',')[0], msg.split(',')[1], html_safe(msg.split(',')[2]).strip].join(',')
@@ -56,14 +57,14 @@ class Application < Sinatra::Base
 
 	# User Enters Live Reload Chat
 	post '/user' do
-		chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
+		lr_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
 		redirect "/chat/#{user_strong_params}"
 	end
 
 	# CHAT - per User
 	get '/chat/:user' do
 		@user = user_strong_params
-		@chat = chatter.parse_csv
+		@chat = lr_chatter.parse_csv
 
 		erb :chat
 	end
@@ -71,12 +72,16 @@ class Application < Sinatra::Base
 	# CHAT POST METHOD
 	post '/:user/message' do
 		# Executing chat
-		chatter.write_to_csv(Time.now, user_strong_params, message_strong_params)
+		lr_chatter.write_to_csv(Time.now, user_strong_params, message_strong_params)
 	end
 
 	# GET MESSAGES via JSON
-	get '/messages' do
-		json chatter.parse_csv
+	get '/messages/live_reload' do
+		json lr_chatter.parse_csv
+	end
+
+	get '/messages/websockets' do
+		json ws_chatter.parse_csv
 	end
 
 	private

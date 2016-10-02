@@ -5,13 +5,12 @@
     <div id="dump"></div>
 
     <hr>
-<form id="form">
+<form>
     <label for="message">MESSAGE: </label>
     <input type="text" id="input" name="message" placeholder="send a message"></input>
     <input id="send_message" class="btn btn-sm btn-primary" type="submit">
-</form>
     <hr>
-
+</form>
     <a href='/'>Go Back to Home</a>
 <script>
 $(document).ready(function(){
@@ -23,6 +22,7 @@ $(document).ready(function(){
   ws.onmessage = function(data) {
       var array = data.data.split(',')
       var row = {date: array[0], user: array[1], message: array[2]}
+
       if ( row.user === "STATUS") {
         $('#dump > ul > li:last-child').after(createLI(row, 'red'));
       } else {
@@ -62,7 +62,7 @@ $(document).ready(function(){
 
   function readAndDisplayFromCSV() {
     $.ajax({
-      url: '/messages',
+      url: '/messages/websockets',
       dataType: 'json',
     }).done(function(data){
       createList(data);
