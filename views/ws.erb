@@ -1,17 +1,18 @@
+  <div id="msgs"></div>
+  <h3>Hello <strong><%= @user %></strong>! Welcome to Websockets.</h3>
 
-     <div id="msgs"></div>
-     <h3>Hello <strong><%= @user %></strong>!</h3>
+  <div id="dump"></div>
 
-    <div id="dump"></div>
+  <hr>
+  
+  <form>
+      <label for="message">MESSAGE: </label>
+      <input type="text" id="input" name="message" placeholder="send a message"></input>
+      <input id="send_message" class="btn btn-sm btn-primary" type="submit">
+      <hr>
+  </form>
 
-    <hr>
-<form>
-    <label for="message">MESSAGE: </label>
-    <input type="text" id="input" name="message" placeholder="send a message"></input>
-    <input id="send_message" class="btn btn-sm btn-primary" type="submit">
-    <hr>
-</form>
-    <a href='/'>Go Back to Home</a>
+  <a href='/'>Go Back to Home</a>
 <script>
 $(document).ready(function(){
   
