@@ -31,7 +31,7 @@ class Application < Sinatra::Base
 	      ws.onopen do
 	        settings.sockets << ws
 
-	        EM.next_tick { settings.sockets.each{|s| s.send("#{Time.now},STATUS,#{@user.upcase}JOINED CHANNEL") } }
+	        EM.next_tick { settings.sockets.each{|s| s.send("#{Time.now},STATUS,#{@user.upcase} JOINED CHANNEL") } }
 	      end
 
 	      ws.onmessage do |msg|
