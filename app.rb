@@ -13,10 +13,57 @@ class Application < Sinatra::Base
 	# Initialize Chat Functionality
 	ws_chatter = App::Chat.new("websockets")
 	lr_chatter = App::Chat.new("live_reload")
+	mr_chatter = App::Chat.new("manual_reload")
 
+	#----------
+	# HOME PAGE
+	#----------
+	get '/' do
+		erb :index
+	end
 
+	#--------------
+	# Manual RELOAD
+	#--------------
+	post '/mr/user' do
+		mr_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
+		redirect "/mr/chat/#{user_strong_params}"
+	end
+
+	get '/mr/chat/:user' do
+		@user = user_strong_params
+		@chat = mr_chatter.parse_csv
+
+		erb :mr_chat
+	end
+
+	post '/mr/:user/message' do
+		mr_chatter.write_to_csv(Time.now, user_strong_params, message_strong_params)
+		redirect "/mr/chat/#{user_strong_params}"
+	end
+
+	#--------------
+	# LIVE RELOAD
+	#--------------
+	post '/lr/user' do
+		lr_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
+		redirect "/lr/chat/#{user_strong_params}"
+	end
+
+	get '/lr/chat/:user' do
+		@user = user_strong_params
+		@chat = lr_chatter.parse_csv
+
+		erb :chat
+	end
+
+	post '/lr/:user/message' do
+		lr_chatter.write_to_csv(Time.now, user_strong_params, message_strong_params)
+	end
+
+	#--------------
 	# WEBSOCKETS
-	# User enters ws chat
+	#--------------
 	post '/ws' do
 		ws_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
 		redirect "/ws/#{user_strong_params}"
@@ -39,6 +86,7 @@ class Application < Sinatra::Base
 	      	
 	      	# cleaning up for sockets 
 	      	msg = [msg.split(',')[0], msg.split(',')[1], html_safe(msg.split(',')[2]).strip].join(',')
+	      	
 	        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
 	      end
 
@@ -50,38 +98,18 @@ class Application < Sinatra::Base
 	  end
 	end
 
-	# HOME PAGE
-	get '/' do
-		erb :index
-	end
-
-	# User Enters Live Reload Chat
-	post '/user' do
-		lr_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
-		redirect "/chat/#{user_strong_params}"
-	end
-
-	# CHAT - per User
-	get '/chat/:user' do
-		@user = user_strong_params
-		@chat = lr_chatter.parse_csv
-
-		erb :chat
-	end
-
-	# CHAT POST METHOD
-	post '/:user/message' do
-		# Executing chat
-		lr_chatter.write_to_csv(Time.now, user_strong_params, message_strong_params)
-	end
-
+	#----------------------
 	# GET MESSAGES via JSON
+	#----------------------
 	get '/messages/live_reload' do
 		json lr_chatter.parse_csv
 	end
 
 	get '/messages/websockets' do
 		json ws_chatter.parse_csv
+	end
+	get '/messages/manual_reload' do
+		json mr_chatter.parse_csv
 	end
 
 	private

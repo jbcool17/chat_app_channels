@@ -63,9 +63,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  eventmachine
   faye
-  faye-websocket
   sinatra
   sinatra-contrib
   sinatra-websocket
