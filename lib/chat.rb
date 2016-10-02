@@ -2,12 +2,12 @@ require 'csv'
 
 module App
 	class Chat
-		attr_accessor :messages
+		attr_accessor :messages, :chat_name
 
-		def initialize
-			@file_path = 'static/messages.csv'
+		def initialize(chat_name)
+			@chat_name = chat_name
+			@file_path = "static/#{@chat_name}.csv"
 			File.file?(@file_path) ? true : create_csv_file
-
 		end
 
 		def create_csv_file
