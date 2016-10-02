@@ -3,9 +3,6 @@ require 'sinatra/contrib'
 require './lib/chat'
 require 'sinatra-websocket'
 
-
-
-
 class Application < Sinatra::Base
 
 	set :server, 'thin'
@@ -16,6 +13,14 @@ class Application < Sinatra::Base
 	# Initialize Chat Functionality
 	chatter = App::Chat.new
 
+
+	# WEBSOCKETS
+	# User enters ws chat
+	post '/ws' do
+		chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
+		redirect "/ws/#{user_strong_params}"
+	end
+
 	get '/ws/:user' do
 		@user = user_strong_params
 	  if !request.websocket?
@@ -24,6 +29,8 @@ class Application < Sinatra::Base
 	    request.websocket do |ws|
 	      ws.onopen do
 	        settings.sockets << ws
+
+	        EM.next_tick { settings.sockets.each{|s| s.send("#{Time.now},STATUS,#{@user.upcase}JOINED CHANNEL") } }
 	      end
 
 	      ws.onmessage do |msg|
@@ -47,9 +54,9 @@ class Application < Sinatra::Base
 		erb :index
 	end
 
-	# POST FOR USER Name - Entering Chat
+	# User Enters Live Reload Chat
 	post '/user' do
-		chatter.write_to_csv("STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
+		chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
 		redirect "/chat/#{user_strong_params}"
 	end
 

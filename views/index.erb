@@ -1,6 +1,14 @@
-<h3>Welcome, Please enter a user name.</h3>
-
+<h2>Welcome, Please enter a user name.</h2>
+<h3>Live Update</h3>
 <form action="/user" method="post">
+	<label for="user">USER: </label>
+  	<input id="text_input" type="text" name="user">
+  	<input class="btn btn-sm btn-primary" type="submit">
+</form>
+<hr>
+<h3>Websockets</h3>
+
+<form action="/ws" method="post">
 	<label for="user">USER: </label>
   	<input id="text_input" type="text" name="user">
   	<input class="btn btn-sm btn-primary" type="submit">
