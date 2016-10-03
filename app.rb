@@ -77,7 +77,7 @@ class Application < Sinatra::Base
 	      ws.onopen do
 	        settings.sockets << ws
 	        ws_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
-	        EM.next_tick { settings.sockets.each{|s| s.send("#{Time.now},STATUS,#{@user.upcase} JOINED CHANNEL") } }
+	        EM.next_tick { settings.sockets.each{|s| s.send("#{Time.now},STATUS,#{@user.upcase} HAS JOINED THE CHANNEL") } }
 	      end
 
 	      ws.onmessage do |msg|
