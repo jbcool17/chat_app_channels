@@ -65,7 +65,6 @@ class Application < Sinatra::Base
 	# WEBSOCKETS
 	#--------------
 	post '/ws' do
-		ws_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
 		redirect "/ws/#{user_strong_params}"
 	end
 
@@ -77,7 +76,7 @@ class Application < Sinatra::Base
 	    request.websocket do |ws|
 	      ws.onopen do
 	        settings.sockets << ws
-
+	        ws_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
 	        EM.next_tick { settings.sockets.each{|s| s.send("#{Time.now},STATUS,#{@user.upcase} JOINED CHANNEL") } }
 	      end
 
