@@ -30,8 +30,6 @@ $(document).ready(function(){
         $('#dump > ul > li:last-child').after(createLI(row, 'green'));
       }    
       console.log('on message run...')
-      // $('#msgs').html('CHAT-STATUS: websocket messaged: ' + row.message);
-      // console.log(row)
       autoScroll();
   };
   
@@ -96,7 +94,7 @@ $(document).ready(function(){
   }
 
   function autoScroll(){
-    $("div#dump ul").animate({ scrollTop: $("div#dump ul")[0].scrollHeight }, "slow");
+    $("ul#msgs").animate({ scrollTop: $("ul#msgs")[0].scrollHeight }, "slow");
   }
 
   function postToCSV(text) {
@@ -105,7 +103,6 @@ $(document).ready(function(){
     
     console.log('STATUS=> triggering sockets...')
     ws.send([data.date,data.user,data.message].join(',')); 
-    autoScroll();
   }
 });
 </script>
