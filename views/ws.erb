@@ -17,7 +17,7 @@
 $(document).ready(function(){
   
   // WEBSOCKET
-  var ws = new WebSocket('wss://' + window.location.host + window.location.pathname);
+  var ws = new WebSocket('ws://' + window.location.host + window.location.pathname);
   ws.onopen    = function()  { $('#msgs').html('CHAT-STATUS: websocket opened'); }
   ws.onclose   = function()  { $('#msgs').html('CHAT-STATUS: websocket closed'); }
   ws.onmessage = function(data) {
@@ -104,5 +104,12 @@ $(document).ready(function(){
     console.log('STATUS=> triggering sockets...')
     ws.send([data.date,data.user,data.message].join(',')); 
   }
+
+  // PING - Keeps Websocket Alive - 60sec
+  setInterval(function(){
+    console.log('ping')
+    ws.send('ping,ping,ping');
+  }, 60000)
+
 });
 </script>

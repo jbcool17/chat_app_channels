@@ -81,12 +81,13 @@ class Application < Sinatra::Base
 	      end
 
 	      ws.onmessage do |msg|
-	      	ws_chatter.write_to_csv(msg.split(',')[0], @user, html_safe(msg.split(',')[2]).strip)
+	      	if ( msg.split(',')[0] != 'ping')
+	      		ws_chatter.write_to_csv(msg.split(',')[0], @user, html_safe(msg.split(',')[2]).strip)
+	      		# cleaning up for sockets 
+	      		msg = [msg.split(',')[0], msg.split(',')[1], html_safe(msg.split(',')[2]).strip].join(',')
 	      	
-	      	# cleaning up for sockets 
-	      	msg = [msg.split(',')[0], msg.split(',')[1], html_safe(msg.split(',')[2]).strip].join(',')
-	      	
-	        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+	        	EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+	        end
 	      end
 
 	      ws.onclose do
