@@ -1,6 +1,6 @@
   <div id="msgs"></div>
   <h3>Hello <strong><%= @user %></strong>! Welcome to Websockets.</h3>
-
+  <%= @user_color %>
   <div id="dump"></div>
 
   <hr>
@@ -27,7 +27,7 @@ $(document).ready(function(){
       if ( row.user === "STATUS") {
         $('#dump > ul > li:last-child').after(createLI(row, 'red'));
       } else {
-        $('#dump > ul > li:last-child').after(createLI(row, 'green'));
+        $('#dump > ul > li:last-child').after(createLI(row, "<%= @user_color %>"));
       }    
       console.log('on message run...')
       autoScroll();
@@ -94,7 +94,7 @@ $(document).ready(function(){
   function createLI(row, style){
     var date = new Date(row.date).toString().split('GMT');
 
-    return '<li class=' + style + '>' + date[0] + ' | ' + row.user + ' : ' + row.message + '</li>'
+    return '<li style="background-color:' + style + '" class=' + style + '>' + date[0] + ' | ' + row.user + ' : ' + row.message + '</li>'
   }
 
   function autoScroll(){

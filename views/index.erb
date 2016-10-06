@@ -27,3 +27,17 @@
   	<input class="btn btn-sm btn-primary" type="submit">
 </form>
 
+
+<script>
+	var a;
+	$('form').on('submit', function(e){
+		
+		if (e.target[0].value.length === 0) {
+			alert('Please Enter A Name!')
+				
+			return false;
+		}
+	
+	
+	})
+</script>

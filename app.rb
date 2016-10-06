@@ -70,11 +70,17 @@ class Application < Sinatra::Base
 	#--------------
 	# User Enters / Chat Area - Websockets
 	post '/ws' do
+		ws_chatter.set_user_color(user_strong_params)
+
 		redirect "/ws/#{user_strong_params}"
 	end
 
 	get '/ws/:user' do
+		
 		@user = user_strong_params
+		@current_ws_users = ws_chatter.chat_user_list
+		@user_color = ws_chatter.chat_user_list[@user]
+
 	  if !request.websocket?
 	    erb :ws_chat
 	  else
