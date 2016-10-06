@@ -43,17 +43,25 @@ $(document).ready(function(){
   // Send Message Functions
   $('#message').keypress(function (e) {
     if (e.which == 13) {
-    postAndUpdate($('#input').val());
-      $('#input').val('');
+      checkInput();
       return false;
     }
   });
 
   $("#send_message").click(function(){
-    postAndUpdate($('#input').val());
-    $('#input').val('');
+    checkInput();
     return false;
   });
+
+  function checkInput(){
+    var input = $('#input').val();
+    if (input.length > 0){
+      postAndUpdate(input);
+        $('#input').val('');
+      } else {
+        alert("Please Enter a message!")
+      }
+  }
 
   function readAndDisplayFromCSV() {
     $.ajax({

@@ -121,7 +121,7 @@ class Application < Sinatra::Base
 	end
 
 	private
-	# Cleaning Up User Input
+	# Cleaning Up User Input for DB
 	def user_strong_params
 	    html_safe(params[:user]).strip
 	end

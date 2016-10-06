@@ -31,19 +31,26 @@
 	// Send Message Functions
 	$('#message').keypress(function (e) {
 	  if (e.which == 13) {
-		postToCSV($('#message').val());
-	    $('#message').val('');
+	  	checkInput();
 	    return false;
 	  }
 	});
 
 	$("#send_message").click(function(){
-		postToCSV($('#message').val());
-		$('#message').val('');
+		checkInput();
+
 		return false;
 	});
 
-
+	function checkInput(){
+		var input = $('#message').val();
+		if (input.length > 0){
+			postToCSV(input);
+	    	$('#message').val('');
+	    } else {
+	    	alert("Please Enter a message!")
+	    }
+	}
 	// Check csv for new data
 	setInterval(function(){ readAndDisplayFromCSV(); }, 1000);
 
