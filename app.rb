@@ -1,14 +1,13 @@
 require 'sinatra'
 require 'sinatra/contrib'
-require './lib/chat'
 require 'sinatra-websocket'
+require './lib/chat'
 
 class Application < Sinatra::Base
 
 	set :server, 'thin'
 	set :sockets, []
 	set :public_folder, File.dirname(__FILE__) + '/static'
-
 
 	# Initialize Chat Functionality
 	ws_chatter = App::Chat.new("websockets")
@@ -25,6 +24,7 @@ class Application < Sinatra::Base
 	#--------------
 	# Manual RELOAD
 	#--------------
+	# User Enters / Chat Area / Post Message
 	post '/mr/user' do
 		mr_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
 		redirect "/mr/chat/#{user_strong_params}"
@@ -45,16 +45,20 @@ class Application < Sinatra::Base
 	#--------------
 	# LIVE RELOAD
 	#--------------
+	# User Enters / Chat Area / Post Message
 	post '/lr/user' do
-		lr_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
-		redirect "/lr/chat/#{user_strong_params}"
+		user = user_strong_params
+		
+		lr_chatter.write_to_csv(Time.now, "STATUS", "#{user.upcase} HAS JOINED THE CHANNEL")
+		redirect "/lr/chat/#{user}"
+		
 	end
 
 	get '/lr/chat/:user' do
 		@user = user_strong_params
 		@chat = lr_chatter.parse_csv
 
-		erb :chat
+		erb :lr_chat
 	end
 
 	post '/lr/:user/message' do
@@ -64,6 +68,7 @@ class Application < Sinatra::Base
 	#--------------
 	# WEBSOCKETS
 	#--------------
+	# User Enters / Chat Area - Websockets
 	post '/ws' do
 		redirect "/ws/#{user_strong_params}"
 	end
@@ -71,19 +76,22 @@ class Application < Sinatra::Base
 	get '/ws/:user' do
 		@user = user_strong_params
 	  if !request.websocket?
-	    erb :ws
+	    erb :ws_chat
 	  else
 	    request.websocket do |ws|
 	      ws.onopen do
 	        settings.sockets << ws
+
 	        ws_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
+
 	        EM.next_tick { settings.sockets.each{|s| s.send("#{Time.now},STATUS,#{@user.upcase} HAS JOINED THE CHANNEL") } }
 	      end
 
 	      ws.onmessage do |msg|
 	      	if ( msg.split(',')[0] != 'ping')
 	      		ws_chatter.write_to_csv(msg.split(',')[0], @user, html_safe(msg.split(',')[2]).strip)
-	      		# cleaning up for sockets 
+	      		
+	      		# cleaning up for storage 
 	      		msg = [msg.split(',')[0], msg.split(',')[1], html_safe(msg.split(',')[2]).strip].join(',')
 	      	
 	        	EM.next_tick { settings.sockets.each{|s| s.send(msg) } }

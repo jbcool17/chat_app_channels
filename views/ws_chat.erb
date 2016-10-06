@@ -43,21 +43,17 @@ $(document).ready(function(){
   // Send Message Functions
   $('#message').keypress(function (e) {
     if (e.which == 13) {
-    postToCSV($('#input').val());
+    postAndUpdate($('#input').val());
       $('#input').val('');
       return false;
     }
   });
 
   $("#send_message").click(function(){
-    postToCSV($('#input').val());
+    postAndUpdate($('#input').val());
     $('#input').val('');
     return false;
   });
-
-
-  // Check csv for new data
-  // setInterval(function(){ readAndDisplayFromCSV(); }, 1000);
 
   function readAndDisplayFromCSV() {
     $.ajax({
@@ -97,7 +93,7 @@ $(document).ready(function(){
     $("ul#msgs").animate({ scrollTop: $("ul#msgs")[0].scrollHeight }, "slow");
   }
 
-  function postToCSV(text) {
+  function postAndUpdate(text) {
     var user = "<%= @user %>"
     var data = {date: Date(), user: user, message: text}
     

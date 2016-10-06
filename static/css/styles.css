@@ -31,3 +31,9 @@ tr:nth-child(even){
 .green:nth-child(odd){
 	background-color: rgba(0,255,200,.5);
 }
+
+.flash {
+	color: red;
+	padding: 10px;
+	
+}
