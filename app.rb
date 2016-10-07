@@ -88,17 +88,17 @@ class Application < Sinatra::Base
 	      ws.onopen do
 	        settings.sockets << ws
 
-	        ws_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
+	        ws_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL", "#FF4000")
 
-	        EM.next_tick { settings.sockets.each{|s| s.send("#{Time.now},STATUS,#{@user.upcase} HAS JOINED THE CHANNEL") } }
+	        EM.next_tick { settings.sockets.each{|s| s.send("#{Time.now},STATUS,#{@user.upcase} HAS JOINED THE CHANNEL,#FF4000") } }
 	      end
 
 	      ws.onmessage do |msg|
 	      	if ( msg.split(',')[0] != 'ping')
-	      		ws_chatter.write_to_csv(msg.split(',')[0], @user, html_safe(msg.split(',')[2]).strip)
+	      		ws_chatter.write_to_csv(msg.split(',')[0], @user, html_safe(msg.split(',')[2]).strip, ws_chatter.chat_user_list[@user])
 	      		
 	      		# cleaning up for storage 
-	      		msg = [msg.split(',')[0], msg.split(',')[1], html_safe(msg.split(',')[2]).strip].join(',')
+	      		msg = [msg.split(',')[0], msg.split(',')[1], html_safe(msg.split(',')[2]).strip, msg.split(',')[3]].join(',')
 	      	
 	        	EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
 	        end

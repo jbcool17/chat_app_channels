@@ -22,12 +22,13 @@ $(document).ready(function(){
   ws.onclose   = function()  { $('#msgs').html('CHAT-STATUS: websocket closed'); }
   ws.onmessage = function(data) {
       var array = data.data.split(',')
-      var row = {date: array[0], user: array[1], message: array[2]}
+      var row = {date: array[0], user: array[1], message: array[2], color: array[3]}
+      console.log(row)
 
       if ( row.user === "STATUS") {
-        $('#dump > ul > li:last-child').after(createLI(row, 'red'));
+        $('#dump > ul > li:last-child').after(createLI(row, '#FF4000'));
       } else {
-        $('#dump > ul > li:last-child').after(createLI(row, "<%= @user_color %>"));
+        $('#dump > ul > li:last-child').after(createLI(row, "green"));
       }    
       console.log('on message run...')
       autoScroll();
@@ -80,7 +81,7 @@ $(document).ready(function(){
       var row = allRows[i]
 
       if ( row.user === "STATUS") {
-        list += createLI(row, 'red')
+        list += createLI(row, '#FF4000')
       } else {
         list += createLI(row, 'green')
       }
@@ -94,7 +95,7 @@ $(document).ready(function(){
   function createLI(row, style){
     var date = new Date(row.date).toString().split('GMT');
 
-    return '<li style="background-color:' + style + '" class=' + style + '>' + date[0] + ' | ' + row.user + ' : ' + row.message + '</li>'
+    return '<li style="background-color:' + row.color + '">' + date[0] + ' | ' + row.user + ' : ' + row.message + '</li>'
   }
 
   function autoScroll(){
@@ -103,16 +104,16 @@ $(document).ready(function(){
 
   function postAndUpdate(text) {
     var user = "<%= @user %>"
-    var data = {date: Date(), user: user, message: text}
+    var data = {date: Date(), user: user, message: text, color: "<%= @user_color %>"}
     
     console.log('STATUS=> triggering sockets...')
-    ws.send([data.date,data.user,data.message].join(',')); 
+    ws.send([data.date,data.user,data.message,data.color].join(',')); 
   }
 
   // PING - Keeps Websocket Alive - 60sec
   setInterval(function(){
     console.log('ping')
-    ws.send('ping,ping,ping');
+    ws.send('ping,ping,ping,ping');
   }, 60000)
 
 });

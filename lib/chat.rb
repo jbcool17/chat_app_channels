@@ -13,16 +13,16 @@ module App
 
 		def create_csv_file
 			csv = CSV.open(@file_path, "a+")
-			csv << ["date", "user", "message"]
-			csv << [Time.now, "STATUS", "Chat has started"]
+			csv << ["date", "user", "message", "color"]
+			csv << [Time.now, "STATUS", "Chat has started", "rgba(255, 0, 75, .5)"]
 
 			csv.close
 		end
 
-		def write_to_csv(time, user, message)
+		def write_to_csv(time, user, message, color)
 			csv = CSV.open(@file_path, "a+")
 			# Write to CSV
-			csv << [time, user, message]
+			csv << [time, user, message, color]
 			csv.close
 		end
 
@@ -41,9 +41,9 @@ module App
 
 
 		def get_color(index)
-			colors = ['red', 'green', 'blue', 
-					  'purple', 'tomatoe', 
-					  'lightblue', 'brown', 'pink']
+			colors = ['#00FFAA', '#00ff88', '#00ffdd', 
+					  '#00ffff', '#00AAFF', 
+					  '#0055ff', '#11AAAA', '#ee11aa']
 
 			colors[index]
 		end
