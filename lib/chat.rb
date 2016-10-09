@@ -8,13 +8,14 @@ module App
 			@chat_name = chat_name
 			@file_path = "static/#{@chat_name}.csv"
 			File.file?(@file_path) ? true : create_csv_file
+			@colors = ["#D3D3D3"]
 			@chat_user_list = {}
 		end
 
 		def create_csv_file
 			csv = CSV.open(@file_path, "a+")
 			csv << ["date", "user", "message", "color"]
-			csv << [Time.now, "STATUS", "Chat has started", "rgba(255, 0, 75, .5)"]
+			csv << [Time.now, "STATUS", "Chat has started", "#D3D3D3"]
 
 			csv.close
 		end
@@ -34,18 +35,19 @@ module App
 		end
 
 		def set_user_color(user)
-			current_total = @chat_user_list.count
-
-			@chat_user_list[user] = get_color(current_total)
+			@chat_user_list[user] = get_color
 		end
 
 
-		def get_color(index)
-			colors = ['#00FFAA', '#00ff88', '#00ffdd', 
-					  '#00ffff', '#00AAFF', 
-					  '#0055ff', '#11AAAA', '#ee11aa']
+		def get_color
 
-			colors[index]
+			color = "#%06x" % (rand * 0xffffff)
+
+			if (@colors.include?(color))
+				color = "#%06x" % (rand * 0xffffff)
+			end
+
+			color
 		end
 
 	end
