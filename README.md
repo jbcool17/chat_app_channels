@@ -1,5 +1,5 @@
 # Chat App
-- simple multi user chat app made with sinatra
+- demonstrating different ways to make chat applications using ruby/sinatra/javascript
 
 ## RUN
 ```
@@ -8,10 +8,21 @@ $ rackup
 ```
 
 ## SPECS & NOTES
+- Original Manual Reload can be found in branch: feature_manual_reload
 - ruby 2.3.0
 - sintra
 - styles = Bootstrap/Jquery - CDN / Custom CSS
-- stores data via CSV
-- page updates when message is submited
-- started to work on manual_reload/live_reload/websockets: needs clean up/bug fixes
-- getting ready for heroku deploy in feature/production branches
+- currently stores data via CSV
+- deployed to heroku via production branch
+
+### Manual Reload
+- page refreshes when message is submited
+- posts message, then refreshes page
+
+### Live Reload
+- javascript is constantly polling for new data and updating view
+
+### Websockets
+- uses websockets for chat(no page refresh or constant requests for server)
+- look into keeping sockets open on heroku
+- setup for https
