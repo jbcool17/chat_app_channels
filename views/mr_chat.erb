@@ -1,5 +1,5 @@
 
-<h3>Hello <strong><%= @user %></strong>!</h3>
+<h3>Hello <strong><%= @user %></strong>! Welcome Manual Reload.</h3>
 
 <ul class="chat-window list-group">
 	<% @chat.each do |row| %>
@@ -10,7 +10,7 @@
 
 <hr>
 
-<form action="/<%= @user %>/message" method="post">
+<form action="/mr/<%= @user %>/message" method="post">
 	<label for="message">MESSAGE: </label>
 	<input id="message" type="text" name="message">
   	<input class="btn btn-sm btn-primary" type="submit">
@@ -20,11 +20,8 @@
 
 <a href='/'>Go Back to Home</a>
 
-
 <script>
 	$('#message').focus();
 	$('#message').select();
-	// $('.chat-window').animate({ scrollTop: $('.chat-window').height() });
 	$('.chat-window').scrollTop($('.chat-window')[0].scrollHeight);
-	
 </script>

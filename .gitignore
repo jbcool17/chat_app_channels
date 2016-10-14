@@ -1,4 +1,7 @@
-messages.txt
-messages.csv
-
+*.txt
+*.csv
+.env
 todo.txt
+
+tmp/
+log/.bundle/
