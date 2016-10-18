@@ -46,6 +46,8 @@ class Application < Sinatra::Base
         comments << comment
     
 		File.write('./static/comments.json',JSON.pretty_generate(comments, indent: '    '),encoding: 'UTF-8')	  
+
+		json comments
 	end
 
 	#--------------
