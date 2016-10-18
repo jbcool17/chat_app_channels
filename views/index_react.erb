@@ -1,47 +1,4 @@
-<h2>Welcome, Please choose a chat type and enter a user name.</h2>
-<h3>Manual Update</h3>
-
-<form action="/mr/user" method="post">
-	<label for="user">USER: </label>
-  	<input id="text_input" type="text" name="user">
-  	<input class="btn btn-sm btn-primary" type="submit">
-</form> 
-
-<hr>
-
-<h3>Live Update</h3>
-
-<form action="/lr/user" method="post">
-	<label for="user">USER: </label>
-  	<input id="text_input" type="text" name="user">
-  	<input class="btn btn-sm btn-primary" type="submit">
-</form>
-
-<hr>
-
-<h3>Websockets</h3>
-
-<form action="/ws" method="post">
-	<label for="user">USER: </label>
-  	<input id="text_input" type="text" name="user">
-  	<input class="btn btn-sm btn-primary" type="submit">
-</form>
-
-
-<script>
-	var a;
-	$('form').on('submit', function(e){
-		
-		if (e.target[0].value.length === 0) {
-			alert('Please Enter A Name!')
-				
-			return false;
-		}
-	
-	
-	})
-</script>
-
+<h3>REACT</h3>
 <div id="content"></div>
 <script src="./js/remarkable.js"></script>
 <script src="./js/example.js" type="text/babel"></script>

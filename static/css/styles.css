@@ -37,3 +37,8 @@ tr:nth-child(even){
 	padding: 10px;
 	
 }
+
+.commentList {
+	height: 200px;
+	overflow: scroll;
+}

@@ -33,14 +33,15 @@ class Application < Sinatra::Base
 		json comments
 	end
 	post '/api/comments' do
+		comment = {}
 		comments = JSON.parse(File.read('./static/comments.json', encoding: 'UTF-8'))
 		
-		comment = { id: (Time.now.to_f * 1000).to_i } 
-        comment = {author: params[:author] }
-        comment = {comment: params[:comment]}
+		comment[:id] = (Time.now.to_f * 1000).to_i
+        comment[:author] =  params['author']
+        comment[:text] = params['text']
 
         comments << comment
-        
+    
 		File.write('./static/comments.json',JSON.pretty_generate(comments, indent: '    '),encoding: 'UTF-8')
 		  
 	end

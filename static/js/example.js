@@ -2,7 +2,7 @@
 var Comment = React.createClass({
   rawMarkup: function() {
     var md = new Remarkable();
-    var rawMarkup = md.render(this.props.children.toString());
+    var rawMarkup = md.render(this.props.children);
     return { __html: rawMarkup };
   },
 
@@ -23,9 +23,11 @@ var CommentBox = React.createClass({
     $.ajax({
       url: this.props.url,
       dataType: 'json',
+      type: 'GET',
       cache: false,
       success: function(data) {
         this.setState({data: data});
+        console.log('data been got')
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -64,9 +66,11 @@ var CommentBox = React.createClass({
   render: function() {
     return (
       <div className="commentBox">
+        <CommentForm onCommentSubmit={this.handleCommentSubmit} />
+        <hr/>
         <h1>Comments</h1>
         <CommentList data={this.state.data} />
-        <CommentForm onCommentSubmit={this.handleCommentSubmit} />
+        
       </div>
     );
   }
@@ -124,7 +128,7 @@ var CommentForm = React.createClass({
           value={this.state.text}
           onChange={this.handleTextChange}
         />
-        <input type="submit" value="Post" />
+        <input type="submit" method="post" />
       </form>
     );
   }
