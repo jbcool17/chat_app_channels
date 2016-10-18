@@ -22,12 +22,15 @@ class Application < Sinatra::Base
 		erb :index
 	end
 
+	#----------
+	# React - Setup based on tutorial
+	#----------
+
 	get '/react' do
 		erb :index_react
 	end
 
 	get '/api/comments' do
-
 		comments = JSON.parse(File.read('./static/comments.json', encoding: 'UTF-8'))
 
 		json comments
@@ -42,8 +45,7 @@ class Application < Sinatra::Base
 
         comments << comment
     
-		File.write('./static/comments.json',JSON.pretty_generate(comments, indent: '    '),encoding: 'UTF-8')
-		  
+		File.write('./static/comments.json',JSON.pretty_generate(comments, indent: '    '),encoding: 'UTF-8')	  
 	end
 
 	#--------------
