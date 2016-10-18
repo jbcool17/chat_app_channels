@@ -2,7 +2,7 @@
 *.csv
 .env
 todo.txt
-comments.json
+static/comments.json
 
 tmp/
 log/.bundle/
