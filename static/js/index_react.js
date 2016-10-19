@@ -1,32 +1,32 @@
 var FormBox = React.createClass({
-  handleCommentSubmit: function(data) {
+  handleUserSetSubmit: function(data) {
     console.log('handleCommentSubmit', data.url, data.user)
     
-    $.ajax({
-      url: data.url,
-      dataType: 'text',
-      type: 'POST',
-      data: data,
-      success: function(date) {
-        // console.log(data)
-        window.location.pathname = "/mr/chat/" + data.user;
-      },
-      error: function(xhr, status, err) {
-        console.error(data.url, status, err.toString());
-      }
-    });
-  },
-  getInitialState: function() {
-    return {data: []};
+    var re = /mr|ws|lr/;
+    var chat = re.exec(data.url);
+
+    switch(chat[0]) {
+      case "mr":
+          window.location.pathname = "/mr/" + data.user;
+          break;
+      case "lr":
+          window.location.pathname = "/lr/" + data.user;
+          break;
+      case "ws":
+          window.location.pathname = "/ws/" + data.user;
+          break;
+      default:
+          console.log("not found.")
+    }
   },
   render: function() {
     return (
       <div className="commentBox">
-        <UserForm url="/mr/user"onCommentSubmit={this.handleCommentSubmit} />
+        <UserForm chatName="Manual Reload" url="/mr/user"onCommentSubmit={this.handleUserSetSubmit} />
         <br/>
-        <UserForm url="/lr/user"onCommentSubmit={this.handleCommentSubmit} />
+        <UserForm chatName="Live Reload" url="/lr/user"onCommentSubmit={this.handleUserSetSubmit} />
         <br/>
-        <UserForm url="/ws"onCommentSubmit={this.handleCommentSubmit} />    
+        <UserForm chatName="Websockets" url="/ws"onCommentSubmit={this.handleUserSetSubmit} />    
       </div>
     );
   }
@@ -54,6 +54,7 @@ var UserForm = React.createClass({
   render: function() {
     return (
       <form className="userForm" action={this.props.url} onSubmit={this.handleSubmit} method="post">
+      <h3>{this.props.chatName} </h3>
         <label>USER: </label>
           <input
           type="text"
