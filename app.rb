@@ -25,9 +25,12 @@ class Application < Sinatra::Base
 	#----------
 	# React - Setup based on tutorial
 	#----------
+	get '/react/index' do
+		erb :index_react
+	end
 
 	get '/react' do
-		erb :index_react
+		erb :test_react
 	end
 
 	get '/api/comments' do
