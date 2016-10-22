@@ -1,5 +1,3 @@
-require 'csv'
-
 module App
 	class Chat
 		attr_accessor :messages, :chat_name, :chat_user_list
