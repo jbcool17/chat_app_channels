@@ -1,4 +1,4 @@
-var FormBox = React.createClass({
+var FormView = React.createClass({
   handleUserSetSubmit: function(data) {
     console.log('handleCommentSubmit', data.url, data.user)
     
@@ -56,12 +56,7 @@ var UserForm = React.createClass({
       <form className="userForm" action={this.props.url} onSubmit={this.handleSubmit} method="post">
       <h3>{this.props.chatName} </h3>
         <label> USER: </label>
-          <input
-          type="text"
-          placeholder="Enter user name."
-          value={this.state.user}
-          onChange={this.handleChange}
-        />
+          <input type="text" placeholder="Enter user name." value={this.state.user} onChange={this.handleChange} />
           <input className="btn btn-sm btn-primary" type="submit" onChange={this.handleSubmit}/>
       </form> 
     );
@@ -69,6 +64,6 @@ var UserForm = React.createClass({
 });
 
 ReactDOM.render(
-  <FormBox/>,
+  <FormView/>,
   document.getElementById('content')
 );
