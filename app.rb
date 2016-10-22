@@ -25,10 +25,6 @@ class Application < Sinatra::Base
 	#----------
 	# React - Setup based on tutorial
 	#----------
-	get '/react/index' do
-		erb :index_react
-	end
-
 	get '/react' do
 		erb :test_react
 	end

@@ -55,7 +55,7 @@ var UserForm = React.createClass({
     return (
       <form className="userForm" action={this.props.url} onSubmit={this.handleSubmit} method="post">
       <h3>{this.props.chatName} </h3>
-        <label>USER: </label>
+        <label> USER: </label>
           <input
           type="text"
           placeholder="Enter user name."
