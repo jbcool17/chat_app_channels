@@ -11,9 +11,11 @@ $ rackup
 - Original Manual Reload can be found in branch: feature_manual_reload
 - ruby 2.3.0
 - sintra
+- postgres - production / sqlite3 - development
+- deployed to heroku via production branch - [Online Here](https://morning-island-89210.herokuapp.com/)
 - styles = Bootstrap/Jquery - CDN / Custom CSS
-- currently stores data via CSV
-- deployed to heroku via production branch
+- started to use react for views(setup on home page)
+- random color per user is working, needs to be tweeked
 
 ### Manual Reload
 - page refreshes when message is submited
