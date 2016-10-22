@@ -7,6 +7,6 @@ gem "sinatra-websocket"
 gem "faye"
 
 gem "sinatra-activerecord"
-gem "sqlite3"
+gem "sqlite3", :group => :development
 gem "rake"
 gem "pg"
