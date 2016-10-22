@@ -45,6 +45,7 @@ GEM
     i18n (0.7.0)
     minitest (5.9.1)
     multi_json (1.12.1)
+    pg (0.19.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -87,6 +88,7 @@ PLATFORMS
 
 DEPENDENCIES
   faye
+  pg
   rake
   sinatra
   sinatra-activerecord

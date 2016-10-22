@@ -11,7 +11,7 @@ class Application < Sinatra::Base
 	set :server, 'thin'
 	set :sockets, []
 	set :public_folder, File.dirname(__FILE__) + '/static'
-	set :database, {adapter: "sqlite3", database: "db/messages.sqlite3"}
+	set :database_file, "config/database.yml"
 
 	# Initialize Chat Functionality
 	ws_chatter = App::Chat.new("websockets")
