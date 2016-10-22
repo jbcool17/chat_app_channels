@@ -1,9 +1,9 @@
 
-<h3>Hello <strong><%= @user %></strong>! Welcome Manual Reload.</h3>
+<h3>Hello <strong><%= @user %></strong>! Welcome to Manual Reload.</h3>
 
 <ul class="chat-window list-group">
 	<% @chat.each do |row| %>
-		<li><%= row[:date] %> | <%= row[:user] %>: <%= row[:message] %></li>
+		<li style="background-color: <%= row[:color] %>"><%= row[:date] %> | <%= row[:user] %>: <%= row[:message] %></li>
 	<% end %>
 
 </ul>

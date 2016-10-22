@@ -21,12 +21,6 @@ class Application < Sinatra::Base
 	#----------
 	# HOME PAGE
 	#----------
-	get '/messages' do
-		@messages = Message.all
-		erb :testdb
-
-	end
-
 	get '/' do
 		erb :index
 	end
@@ -63,19 +57,20 @@ class Application < Sinatra::Base
 	#--------------
 	# User Enters / Chat Area / Post Message
 	get '/mr/:user' do
-		mr_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
+		mr_chatter.write_data(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
 		redirect "/mr/chat/#{user_strong_params}"
 	end
 
 	get '/mr/chat/:user' do
 		@user = user_strong_params
-		@chat = mr_chatter.parse_csv
+		@chat = Message.all
 
 		erb :mr_chat
 	end
 
 	post '/mr/:user/message' do
-		mr_chatter.write_to_csv(Time.now, user_strong_params, message_strong_params)
+		mr_chatter.write_data(Time.now, user_strong_params, message_strong_params, mr_chatter.get_color)
+
 		redirect "/mr/chat/#{user_strong_params}"
 	end
 
@@ -84,19 +79,19 @@ class Application < Sinatra::Base
 	#--------------
 	# User Enters / Chat Area / Post Message
 	get '/lr/:user' do
-		lr_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
+		lr_chatter.write_data(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
 		redirect "/lr/chat/#{user_strong_params}"		
 	end
 
 	get '/lr/chat/:user' do
 		@user = user_strong_params
-		@chat = lr_chatter.parse_csv
+		@chat = Message.all
 
 		erb :lr_chat
 	end
 
 	post '/lr/:user/message' do
-		lr_chatter.write_to_csv(Time.now, user_strong_params, message_strong_params)
+		lr_chatter.write_data(Time.now, user_strong_params, message_strong_params, lr_chatter.get_color)
 	end
 
 	#--------------
@@ -121,14 +116,14 @@ class Application < Sinatra::Base
 	      ws.onopen do
 	        settings.sockets << ws
 
-	        ws_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL", "#D3D3D3")
+	        ws_chatter.write_data(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL", "#D3D3D3")
 
 	        EM.next_tick { settings.sockets.each{|s| s.send("#{Time.now},STATUS,#{@user.upcase} HAS JOINED THE CHANNEL,#D3D3D3") } }
 	      end
 
 	      ws.onmessage do |msg|
 	      	if ( msg.split(',')[0] != 'ping')
-	      		ws_chatter.write_to_csv(msg.split(',')[0], @user, html_safe(msg.split(',')[2]).strip, ws_chatter.chat_user_list[@user])
+	      		ws_chatter.write_data(msg.split(',')[0], @user, html_safe(msg.split(',')[2]).strip, ws_chatter.chat_user_list[@user])
 	      		
 	      		# cleaning up for storage 
 	      		msg = [msg.split(',')[0], msg.split(',')[1], html_safe(msg.split(',')[2]).strip, msg.split(',')[3]].join(',')
@@ -147,16 +142,14 @@ class Application < Sinatra::Base
 
 	#----------------------
 	# GET MESSAGES via JSON
+	# will create chat type field
 	#----------------------
 	get '/messages/live_reload' do
-		json lr_chatter.parse_csv
+		json Message.all.as_json
 	end
 
 	get '/messages/websockets' do
-		json ws_chatter.parse_csv
-	end
-	get '/messages/manual_reload' do
-		json mr_chatter.parse_csv
+		json Message.all.as_json
 	end
 
 	private
