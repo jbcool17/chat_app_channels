@@ -42,3 +42,10 @@ tr:nth-child(even){
 	height: 200px;
 	overflow: scroll;
 }
+
+input.btn.btn-sm.btn-primary {
+	margin-left: 10px;
+}
+label {
+	margin-right: 10px;
+}

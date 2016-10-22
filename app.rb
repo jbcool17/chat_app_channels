@@ -25,9 +25,8 @@ class Application < Sinatra::Base
 	#----------
 	# React - Setup based on tutorial
 	#----------
-
 	get '/react' do
-		erb :index_react
+		erb :test_react
 	end
 
 	get '/api/comments' do
@@ -54,7 +53,7 @@ class Application < Sinatra::Base
 	# Manual RELOAD
 	#--------------
 	# User Enters / Chat Area / Post Message
-	post '/mr/user' do
+	get '/mr/:user' do
 		mr_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
 		redirect "/mr/chat/#{user_strong_params}"
 	end
@@ -75,12 +74,9 @@ class Application < Sinatra::Base
 	# LIVE RELOAD
 	#--------------
 	# User Enters / Chat Area / Post Message
-	post '/lr/user' do
-		user = user_strong_params
-		
-		lr_chatter.write_to_csv(Time.now, "STATUS", "#{user.upcase} HAS JOINED THE CHANNEL")
-		redirect "/lr/chat/#{user}"
-		
+	get '/lr/:user' do
+		lr_chatter.write_to_csv(Time.now, "STATUS", "#{user_strong_params.upcase} HAS JOINED THE CHANNEL")
+		redirect "/lr/chat/#{user_strong_params}"		
 	end
 
 	get '/lr/chat/:user' do

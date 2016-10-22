@@ -20,7 +20,7 @@ module App
 			csv.close
 		end
 
-		def write_to_csv(time, user, message, color)
+		def write_to_csv(time, user, message, color="#D3D3D3")
 			csv = CSV.open(@file_path, "a+")
 			# Write to CSV
 			csv << [time, user, message, color]
