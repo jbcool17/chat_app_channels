@@ -22,18 +22,18 @@ var FormView = React.createClass({
   render: function() {
     return (
       <div className="commentBox">
-        <UserForm chatName="Manual Reload" url="/mr/user"onCommentSubmit={this.handleUserSetSubmit} />
+        <UserFormView chatName="Manual Reload" url="/mr/user"onCommentSubmit={this.handleUserSetSubmit} />
         <br/>
-        <UserForm chatName="Live Reload" url="/lr/user"onCommentSubmit={this.handleUserSetSubmit} />
+        <UserFormView chatName="Live Reload" url="/lr/user"onCommentSubmit={this.handleUserSetSubmit} />
         <br/>
-        <UserForm chatName="Websockets" url="/ws"onCommentSubmit={this.handleUserSetSubmit} />    
+        <UserFormView chatName="Websockets" url="/ws"onCommentSubmit={this.handleUserSetSubmit} />    
       </div>
     );
   }
 });
 
 
-var UserForm = React.createClass({
+var UserFormView = React.createClass({
   getInitialState: function() {
     return {user: ''};
   },
