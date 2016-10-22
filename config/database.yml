@@ -10,8 +10,5 @@ test:
   pool: 5
   timeout: 5000
 
-# production:
-#   adapter: postgresql
-#   encoding: unicode
-#   database: messages_production
-#   pool: 5
+production:
+  url: <%= ENV['DATABASE_URL'] %>
