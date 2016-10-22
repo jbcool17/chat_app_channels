@@ -56,7 +56,7 @@
 
 	function readAndDisplayFromCSV() {
 		$.ajax({
-		  url: '/messages/live_reload',
+		  url: '/messages/live',
 		  dataType: 'json',
 		}).done(function(d){
 			// set current data to array
@@ -109,13 +109,9 @@
 		var allRows = data;
 		var list = '<ul class="chat-window list-group">';
 		for (var i = 0; i < allRows.length; i++){
-			var row = allRows[i]
 
-			if ( row.user === "STATUS") {
-				list += createLI(row, 'red')
-			} else {
-				list += createLI(row, 'green')
-			}
+			list += createLI(allRows[i])
+
 		}
 
 		list += '</ul>'
@@ -123,10 +119,10 @@
 		$('#dump').append(list)	
 	}
 
-	function createLI(row, style){
+	function createLI(row){
 		var date = new Date(row.date).toString().split('GMT');
 
-		return '<li class=' + style + '>' + date[0] + ' | ' + row.user + ' : ' + row.message + '</li>'
+		return '<li style="background-color:' + row.color + '">' + date[0] + ' | ' + row.user + ' : ' + row.message + '</li>'
 	}
 
 	function autoScroll(){
