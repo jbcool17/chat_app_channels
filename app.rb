@@ -25,10 +25,6 @@ class Application < Sinatra::Base
     erb :index
   end
 
-   get '/home' do
-    erb :index
-  end
-
   #----------
   # React - Setup based on tutorial
   #----------

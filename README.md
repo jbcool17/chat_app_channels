@@ -1,5 +1,6 @@
 # Chat App
-- demonstrating different ways to make chat applications using ruby/sinatra/javascript
+- Demonstrating different ways to make chat applications using ruby/javascript
+- Original Manual Reload style can be found in branch: feature_manual_reload
 
 ## RUN
 ```
@@ -8,7 +9,6 @@ $ rackup
 ```
 
 ## SPECS & NOTES
-- Original Manual Reload can be found in branch: feature_manual_reload
 - ruby 2.3.0
 - sintra
 - postgres - production / sqlite3 - development
@@ -16,6 +16,18 @@ $ rackup
 - styles = Bootstrap/Jquery - CDN / Custom CSS
 - started to use react for views(setup on home page)
 - random color per user is working, needs to be tweeked
+
+### Testing
+- using rspec 
+- can be used with guard & foreman
+
+```
+# Automated Testing
+$ bundle exec guard
+
+# Also setup with foreman
+$ foreman start
+```
 
 ### Manual Reload
 - page refreshes when message is submited
