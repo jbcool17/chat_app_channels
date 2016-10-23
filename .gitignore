@@ -4,8 +4,6 @@
 todo.txt
 static/comments.json
 
-db/*.sqlite3
-
 vendor
 *.rbc
 *.sassc
