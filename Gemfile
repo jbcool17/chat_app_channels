@@ -16,4 +16,6 @@ gem 'activesupport'
 group :test do
   gem 'rspec'
   gem 'rack-test'
+  gem 'guard'
+  gem 'guard-rspec'
 end
