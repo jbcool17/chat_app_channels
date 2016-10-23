@@ -18,4 +18,5 @@ group :test do
   gem 'rack-test'
   gem 'guard'
   gem 'guard-rspec'
+  gem 'foreman'
 end

@@ -44,6 +44,8 @@ GEM
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
     ffi (1.9.14)
+    foreman (0.82.0)
+      thor (~> 0.19.1)
     formatador (0.2.5)
     guard (2.14.0)
       formatador (>= 0.2.4)
@@ -141,6 +143,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   faye
+  foreman
   guard
   guard-rspec
   pg

@@ -8,22 +8,16 @@ describe 'Server Service' do
   include Rack::Test::Methods
 
   def app
-    Sinatra::Application
+    Application.new
   end
 
-  it "should load the home page" do
+  it "should load the index page" do
     get '/'
-    puts last_response
-    expect(last_response.status).to eq("200")
+    expect(last_response).to be_ok
   end
 
-  # it "should not load the home page" do
-  #   get '/home'
-  #   expect(last_response).to_not be_ok
-  # end
-
-  # it "should load the other page" do
-  #   get '/real_page'
-  #   expect(last_response).to be_ok
-  # end
+  it "should not load the index page" do
+    get '/index'
+    expect(last_response).to_not be_ok
+  end
 end
