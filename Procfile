@@ -1,1 +1,1 @@
-web: bundle exec thin start -p 9292
+web: bundle exec thin start -p $PORT
