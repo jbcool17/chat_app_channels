@@ -4,7 +4,7 @@
   <div id="dump"></div>
 
   <hr>
-  
+
   <form>
       <label for="message">MESSAGE: </label>
       <input type="text" id="input" name="message" placeholder="send a message"></input>
@@ -15,11 +15,11 @@
   <a href='/'>Go Back to Home</a>
 <script>
 $(document).ready(function(){
-  
+
 
   var re = /https|http/,
       protocol = re.exec(window.location.protocol),
-      wsProtocol = protocol[0] === 'https:' ? 'wss://' : 'ws://' ;
+      wsProtocol = protocol[0] === 'https' ? 'wss://' : 'ws://' ;
 
   // WEBSOCKET
   var ws = new WebSocket(wsProtocol + window.location.host + window.location.pathname);
@@ -34,11 +34,11 @@ $(document).ready(function(){
         $('#dump > ul > li:last-child').after(createLI(row, '#FF4000'));
       } else {
         $('#dump > ul > li:last-child').after(createLI(row, "green"));
-      }    
+      }
       console.log('on message run...')
       autoScroll();
   };
-  
+
   // Read CSV File first and Setup
   readAndDisplayFromCSV();
 
@@ -94,7 +94,7 @@ $(document).ready(function(){
 
     list += '</ul>'
 
-    $('#dump').append(list) 
+    $('#dump').append(list)
   }
 
   function createLI(row, style){
@@ -110,9 +110,9 @@ $(document).ready(function(){
   function postAndUpdate(text) {
     var user = "<%= @user %>"
     var data = {date: Date(), user: user, message: text, color: "<%= @user_color %>"}
-    
+
     console.log('STATUS=> triggering sockets...')
-    ws.send([data.date,data.user,data.message,data.color].join(',')); 
+    ws.send([data.date,data.user,data.message,data.color].join(','));
   }
 
   // PING - Keeps Websocket Alive - 60sec
