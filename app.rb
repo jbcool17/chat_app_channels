@@ -1,9 +1,10 @@
 require 'sinatra'
 require 'sinatra/contrib'
 require 'sinatra-websocket'
-require './lib/chat'
-require 'json'
 require 'sinatra/activerecord'
+require 'json'
+
+require './lib/chat'
 require './models/message'
 
 class Application < Sinatra::Base
@@ -26,7 +27,7 @@ class Application < Sinatra::Base
   end
 
   #----------
-  # React - Setup based on tutorial
+  # React - Setup based on tutorial - FOR TESTING
   #----------
   get '/react' do
     erb :test_react
@@ -130,7 +131,6 @@ class Application < Sinatra::Base
 
     @user = user_strong_params
     ws_chatter.set_user_color(user_strong_params)
-    @current_ws_users = ws_chatter.chat_user_list
     @user_color = ws_chatter.chat_user_list[@user]
 
     if !request.websocket?
@@ -142,36 +142,39 @@ class Application < Sinatra::Base
         ws.onopen do
           settings.sockets << ws
 
-          ws_chatter.write_data(Time.now,
-                                'STATUS',
-                                "#{user_strong_params.upcase} HAS JOINED THE CHANNEL",
-                                '#D3D3D3',
-                                ws_chatter.chat_name)
+          time = Time.now
+          user = 'STATUS'
+          message = "#{user_strong_params.upcase} HAS JOINED THE CHANNEL"
+          color = '#D3D3D3'
 
-          EM.next_tick { settings.sockets.each { |s| s.send("#{Time.now},STATUS,#{@user.upcase} HAS JOINED THE CHANNEL,#D3D3D3") } }
+          ws_chatter.write_data(time,user,message,color,ws_chatter.chat_name)
+
+          EM.next_tick { settings.sockets.each { |s| s.send("#{time},#{user},#{message},#{color}") } }
         end
 
         ws.onmessage do |msg|
+          # Setup Variables
+          date = msg.split(',')[0]
+          message = html_safe(msg.split(',')[2]).strip
+          color = @user_color
+
           if ( msg.split(',')[0] != 'ping')
 
-            ws_chatter.write_data(msg.split(',')[0],
+            ws_chatter.write_data(date,
                                   @user,
-                                  html_safe(msg.split(',')[2]).strip,
-                                  ws_chatter.chat_user_list[@user],
+                                  message,
+                                  color,
                                   ws_chatter.chat_name)
 
-            # cleaning up for storage
-            msg = [msg.split(',')[0],
-                   msg.split(',')[1],
-                   html_safe(msg.split(',')[2]).strip,
-                   msg.split(',')[3]].join(',')
+            # Rebuild a String for Sockets - (date,user,message,color)
+            rebuilt_msg = [date,@user,message,color].join(',')
 
-            EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+            EM.next_tick { settings.sockets.each{|s| s.send(rebuilt_msg) } }
           end
         end
 
         ws.onclose do
-          warn('websocket closed...')
+          warn("websocket #{ws} closed...")
           settings.sockets.delete(ws)
         end
       end
