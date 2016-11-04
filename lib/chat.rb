@@ -20,7 +20,7 @@ module App
 
       color = '#%06x' % (rand * 0xffffff)
 
-      if (@colors.include?(color))
+      while (@colors.include?(color) || color.scan(/\d/).map(&:to_i).min < 5 ) do
         color = '#%06x' % (rand * 0xffffff)
       end
 
