@@ -127,7 +127,7 @@ class Application < Sinatra::Base
     redirect "/ws/#{user_strong_params}"
   end
 
-  get '/ws/:user' do
+  get '/ws/chat/:user' do
 
     @user = user_strong_params
     ws_chatter.set_user_color(user_strong_params)

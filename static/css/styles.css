@@ -35,7 +35,7 @@ tr:nth-child(even){
 .flash {
 	color: red;
 	padding: 10px;
-	
+
 }
 
 .commentList {
@@ -48,4 +48,5 @@ input.btn.btn-sm.btn-primary {
 }
 label {
 	margin-right: 10px;
+  margin-left: 10px;
 }
