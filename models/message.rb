@@ -1,15 +1,18 @@
 class Message < ActiveRecord::Base
-  validates_presence_of :user
+  # has_many :users
+  # has_many :channels
 
-  def self.live
-    Message.where(chat_type: 'live')
-  end
+  # validates :name, presence: true
 
-  def self.manual
-    Message.where(chat_type: 'manual')
-  end
+  # def self.live
+  #   Message.where(chat_type: 'live')
+  # end
 
-  def self.websockets
-    Message.where(chat_type: 'websockets')
-  end
+  # def self.manual
+  #   Message.where(chat_type: 'manual')
+  # end
+
+  # def self.websockets
+  #   Message.where(chat_type: 'websockets')
+  # end
 end

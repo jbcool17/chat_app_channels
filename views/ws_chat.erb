@@ -1,5 +1,5 @@
   <div id="msgs"></div>
-  <h3>Hello <strong><%= @user %></strong>! Welcome to Websockets.</h3>
+  <h3>Hello <strong><%= @user.name %></strong>! Welcome to Websockets.</h3>
   <div id="dump"></div>
 
   <hr>
@@ -108,7 +108,7 @@ $(document).ready(function(){
   }
 
   function postAndUpdate(text) {
-    var user = "<%= @user %>"
+    var user = "<%= @user.name %>"
     var data = {date: Date(), user: user, message: text, color: "<%= @user_color %>"}
 
     console.log('STATUS=> triggering sockets...')

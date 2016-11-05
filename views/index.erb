@@ -1,8 +1,108 @@
 <div class="text-center">
-<h2>Please choose a chat type and enter a user name.</h2>
-<p>Experimenting with different chat style applications</p>
-<hr>
-<div id="content"></div>
-<script src="/js/chatGate.js" type="text/babel"></script>
+  <h2>Please choose a chat type and enter a user name.</h2>
+  <p>Experimenting with different chat style applications</p>
+  <hr>
+  <div id="content">
+    <div class="commentBox">
+      <form id="userForm" action="/not_set" onSubmit={this.handleSubmit} method="post">
+          <h3> Choose A Chat </h3>
+            <label> USER: </label>
+              <input id="userName" type="text" placeholder="Enter user name." />
+            <label>Channel Name: </label>
+              <select>
+                <% @channels.each do |c| %>
+                    <option value="<%= c.name %>"><%= c.name %></option>
+                <% end %>
+              </select>
+              <input className="btn btn-sm btn-primary" type="submit" onChange={this.handleSubmit}/>
+          </form>
+    </div>
+  </div>
 
 </div>
+
+<script>
+  var appState = {
+    user: '',
+    channel: '',
+    channels: [],
+    channelUrl: ''
+  }
+  $.ajax({
+        url: '/channels',
+        dataType: 'json',
+      }).done(function(d){
+        d.forEach(function(c){
+          appState.channels.push(c.name)
+        })
+
+        console.log('turd')
+      })
+
+  // var channels = '<%= @channels %>'
+  // // console.log(channels.split(','))
+  // for (var i =0; i < channels.length; i++){
+  //   appState.channels.push(channels[i]);
+  // }
+
+  $('input#userName').keyup(function(e){
+    // console.log(e.target.value)
+    appState.user = e.target.value;
+    getPostUrl( appState.channel, appState.user)
+  })
+  $('select').change(function(e){
+    // console.log(e.target.value)
+    appState.channel = e.target.value;
+    getPostUrl( appState.channel, appState.user)
+
+  })
+
+  function getPostUrl(channel, user){
+      appState.channelUrl = "/chat/" + channel + '/' + user;
+      $('#userForm').attr("action", appState.channelUrl);
+      console.log(appState.channelUrl)
+  }
+
+  // function handleUserSetSubmit(data) {
+  //     console.log(data)
+  //     // window.location.pathname = "/chat/" + data.channel + '/' + data.user;
+  // }
+
+
+  // function handleSubmit(e) {
+  //   e.preventDefault();
+  //   var user = this.state.user.trim();
+  //   if (!user) {
+  //     return;
+  //   }
+
+  //   var actionUrl = this.getPostUrl(this.state.channel, user);
+
+  //   this.props.onCommentSubmit({ user: user, url: actionUrl });
+  // },
+
+
+  // var UserFormView = React.createClass({
+  //   getInitialState: function() {
+  //     return { user: '', channel: '', channels: [] };
+  //   },
+  //   componentDidMount: function(){
+  //     var channels = []
+  //     $.ajax({
+  //       url: '/channels',
+  //       dataType: 'json',
+  //     }).done(function(d){
+  //       d.forEach(function(c){
+  //         channels.push(c.name)
+  //       })
+
+  //       setTimeout(function(){
+  //         this.setState({channels: channels})
+  //       }, 2000)
+
+
+  //       console.log('turd')
+  //     })
+  //   }
+
+</script>

@@ -1,21 +1,7 @@
 var FormView = React.createClass({
   handleUserSetSubmit: function(data) {
-    var re = /mr|ws|lr/,
-        chat = re.exec(data.url);
-
-    switch(chat[0]) {
-      case "mr":
-          window.location.pathname = "/mr/" + data.user;
-          break;
-      case "lr":
-          window.location.pathname = "/lr/" + data.user;
-          break;
-      case "ws":
-          window.location.pathname = "/ws/chat/" + data.user;
-          break;
-      default:
-          console.log("not found.")
-    }
+    console.log(data)
+    // window.location.pathname = "/chat/" + data.channel + '/' + data.user;
   },
   render: function() {
     return (
@@ -29,9 +15,7 @@ var FormView = React.createClass({
 
 var UserFormView = React.createClass({
   getInitialState: function() {
-    return { user: '',
-             channel: 'websockets',
-             channelUrl: '/websockets' };
+    return { user: '', channel: '', channels: ['test', 'test1'] };
   },
   handleUserChange: function(e) {
     this.setState({ user: e.target.value,
@@ -43,23 +27,7 @@ var UserFormView = React.createClass({
                     channelUrl: this.getPostUrl(channel, this.state.user) });
   },
   getPostUrl: function(channel, user){
-    var channelUrl = '';
-
-    switch(channel) {
-      case "manual":
-          channelUrl = "/mr/" + user;
-          break;
-      case "live":
-          channelUrl = "/lr/" + user;
-          break;
-      case "websockets":
-          channelUrl = "/ws/" + user;
-          break;
-      default:
-          console.log("not found.")
-    }
-
-    return channelUrl;
+    return "/chat/" + channel + '/' + user;;
   },
   handleSubmit: function(e) {
     e.preventDefault();
@@ -73,7 +41,7 @@ var UserFormView = React.createClass({
     this.props.onCommentSubmit({ user: user, url: actionUrl });
   },
   render: function() {
-    var optionNodes = ['websockets', 'live', 'manual'].map(function(option) {
+    var optionNodes = this.state.channels.map(function(option) {
       return (
         <option key={option} value={option}>{option} Channel</option>
       );
