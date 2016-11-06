@@ -4,7 +4,7 @@
   <hr>
   <div id="content">
     <div class="commentBox">
-      <form id="userForm" action="/not_set" onSubmit={this.handleSubmit} method="post">
+      <form id="userForm" action="" method="post">
           <h3> Choose A Chat </h3>
             <label> USER: </label>
               <input id="userName" type="text" placeholder="Enter user name." />
@@ -28,81 +28,40 @@
     channels: [],
     channelUrl: ''
   }
-  $.ajax({
-        url: '/channels',
-        dataType: 'json',
-      }).done(function(d){
-        d.forEach(function(c){
-          appState.channels.push(c.name)
-        })
 
-        console.log('turd')
-      })
+  $.ajax({ url: '/channels', dataType: 'json'}).done( function(d){
+    d.forEach(function(c){ appState.channels.push(c.name) })
+  });
 
-  // var channels = '<%= @channels %>'
-  // // console.log(channels.split(','))
-  // for (var i =0; i < channels.length; i++){
-  //   appState.channels.push(channels[i]);
-  // }
+
+  $('#userForm').on('submit', function(e){
+    var user = $('#userName')[0].value.trim();
+    var url = $('#userForm').attr("action");
+    console.log(user)
+    if ( !user || !url ) {
+      alert('Please Enter a User Name!')
+      return false;
+    }
+
+  });
 
   $('input#userName').keyup(function(e){
-    // console.log(e.target.value)
     appState.user = e.target.value;
+    appState.channel = $('option:selected')[0].value;
+
     getPostUrl( appState.channel, appState.user)
   })
+
   $('select').change(function(e){
-    // console.log(e.target.value)
     appState.channel = e.target.value;
     getPostUrl( appState.channel, appState.user)
 
-  })
+  });
 
   function getPostUrl(channel, user){
       appState.channelUrl = "/chat/" + channel + '/' + user;
       $('#userForm').attr("action", appState.channelUrl);
       console.log(appState.channelUrl)
   }
-
-  // function handleUserSetSubmit(data) {
-  //     console.log(data)
-  //     // window.location.pathname = "/chat/" + data.channel + '/' + data.user;
-  // }
-
-
-  // function handleSubmit(e) {
-  //   e.preventDefault();
-  //   var user = this.state.user.trim();
-  //   if (!user) {
-  //     return;
-  //   }
-
-  //   var actionUrl = this.getPostUrl(this.state.channel, user);
-
-  //   this.props.onCommentSubmit({ user: user, url: actionUrl });
-  // },
-
-
-  // var UserFormView = React.createClass({
-  //   getInitialState: function() {
-  //     return { user: '', channel: '', channels: [] };
-  //   },
-  //   componentDidMount: function(){
-  //     var channels = []
-  //     $.ajax({
-  //       url: '/channels',
-  //       dataType: 'json',
-  //     }).done(function(d){
-  //       d.forEach(function(c){
-  //         channels.push(c.name)
-  //       })
-
-  //       setTimeout(function(){
-  //         this.setState({channels: channels})
-  //       }, 2000)
-
-
-  //       console.log('turd')
-  //     })
-  //   }
 
 </script>
