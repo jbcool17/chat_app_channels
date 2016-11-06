@@ -5,6 +5,7 @@ gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'sinatra-websocket'
 gem 'faye'
+gem 'pry', :group => :development
 
 gem 'sinatra-activerecord'
 gem 'sqlite3', :group => :development
