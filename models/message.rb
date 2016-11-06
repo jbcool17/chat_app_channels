@@ -1,8 +1,8 @@
 class Message < ActiveRecord::Base
-  # has_many :users
-  # has_many :channels
+  has_many :users
+  has_many :channels
 
-  # validates :name, presence: true
+  validates :user, presence: true
 
   # def self.live
   #   Message.where(chat_type: 'live')
