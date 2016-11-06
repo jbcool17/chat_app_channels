@@ -17,16 +17,11 @@ class Application < Sinatra::Base
   set :public_folder, File.dirname(__FILE__) + '/static'
   set :database_file, 'config/database.yml'
 
-  # Initialize Chat Functionality
-  # ws_chatter = App::Chat.new('websockets')
-  # lr_chatter = App::Chat.new('live')
-  # mr_chatter = App::Chat.new('manual')
-
   #----------
   # HOME PAGE
   #----------
   get '/' do
-    @channels = Channel.all.to_a
+    @channels = Channel.all
 
     erb :index
   end
@@ -36,9 +31,7 @@ class Application < Sinatra::Base
   #--------------
   # User Enters / Chat Area - Websockets
   post '/chat/:channel/:user' do
-    chat = App::Chat.new(channel_strong_params)
-
-    User.create name: user_strong_params, color: chat.get_color
+    User.create name: user_strong_params, color: App::Chat.get_color
     # Channel.create name: channel_strong_params
 
     redirect "/chat/#{channel_strong_params}/#{user_strong_params}"
@@ -46,15 +39,13 @@ class Application < Sinatra::Base
 
   get '/chat/:channel/:user' do
 
-    @user = User.find_or_create_by(name: user_strong_params, color: App::Chat.new('test').get_color)
+    @user = User.find_or_create_by(name: user_strong_params, color: App::Chat.get_color)
     @channel = Channel.find_or_create_by(name: channel_strong_params).name
-
-    # ws_chatter.set_user_color(user_strong_params)
     @user_color = @user.color
 
     if !request.websocket?
 
-      erb :ws_chat
+      erb :channel
 
     else
       request.websocket do |ws|
@@ -63,9 +54,6 @@ class Application < Sinatra::Base
 
         ws.onopen do
           settings.sockets << @con
-
-          # puts ws.request['path']
-          # puts settings.sockets.count
           time = Time.now
           user = 'STATUS'
           message = "#{user_strong_params.upcase} HAS JOINED THE CHANNEL"
@@ -85,6 +73,7 @@ class Application < Sinatra::Base
               puts "No Channel Found."
             end
           end
+
           EM.next_tick { return_array.each { |s| s[:socket].send("#{time},#{user},#{message},#{color}") } }
         end
 
@@ -104,7 +93,7 @@ class Application < Sinatra::Base
           message = html_safe(msg.split(',')[2]).strip
           color = @user_color
 
-          if ( msg.split(',')[0] != 'ping')
+          if ( message != 'ping')
 
             Message.create(date: date,
                             user: @user.name,
@@ -120,7 +109,7 @@ class Application < Sinatra::Base
         end
 
         ws.onclose do
-          warn("websocket #{ws} closed...")
+          warn("websocket #{ws.request['path']} closed...")
 
           settings.sockets.each do |hash|
             if hash[:socket] == ws
