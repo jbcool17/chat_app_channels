@@ -8,13 +8,14 @@
           <h3> Choose A Chat </h3>
             <label> USER: </label>
               <input id="userName" type="text" placeholder="Enter user name." />
-            <label>Channel Name: </label>
+            <label>Channel Name(select from dropdown or enter a new one): </label>
               <select>
                 <% @channels.each do |c| %>
                     <option value="<%= c.name %>"><%= c.name %></option>
                 <% end %>
               </select>
-              <input className="btn btn-sm btn-primary" type="submit" onChange={this.handleSubmit}/>
+              <input id="newChannel" placeholder="add new channel" type="text">
+              <input class="btn btn-sm btn-primary" type="submit"/>
           </form>
     </div>
   </div>
@@ -53,6 +54,12 @@
   })
 
   $('select').change(function(e){
+    appState.channel = e.target.value;
+    getPostUrl( appState.channel, appState.user)
+
+  });
+
+  $('#newChannel').keyup(function(e){
     appState.channel = e.target.value;
     getPostUrl( appState.channel, appState.user)
 
