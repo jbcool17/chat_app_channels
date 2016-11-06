@@ -17,13 +17,25 @@ describe 'Server Service' do
     expect(last_response).to be_ok
   end
 
-  it "should get 200 for messages/live" do
-    get '/messages/live'
+  it "should redirect to chat channel" do
+    post '/chat/test_channel/test_user'
+
+    expect(last_request.url).to eq("http://example.org/chat/test_channel/test_user")
+  end
+
+# GET JSON
+  it "should get 200 for /messages" do
+    get '/messages'
     expect(last_response).to be_ok
   end
 
-  it "should get 200 for messages/ws" do
-    get 'messages/websockets'
+  it "should get 200 for /users" do
+    get '/users'
+    expect(last_response).to be_ok
+  end
+
+  it "should get 200 for /channels" do
+    get '/channels'
     expect(last_response).to be_ok
   end
 
