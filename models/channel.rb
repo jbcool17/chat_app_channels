@@ -1,6 +1,6 @@
 class Channel < ActiveRecord::Base
-  has_many :users
+  has_many :messages
 
-  validates :name, presence: true
+  # validates :name, presence: true
 
 end

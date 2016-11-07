@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161104220435) do
+ActiveRecord::Schema.define(version: 20161107150250) do
 
   create_table "channels", force: :cascade do |t|
     t.string "name"
@@ -18,10 +18,9 @@ ActiveRecord::Schema.define(version: 20161104220435) do
 
   create_table "messages", force: :cascade do |t|
     t.datetime "date"
-    t.string   "user"
     t.text     "message"
-    t.string   "color"
-    t.string   "channel_name"
+    t.integer  "user_id"
+    t.integer  "channel_id"
   end
 
   create_table "users", force: :cascade do |t|
