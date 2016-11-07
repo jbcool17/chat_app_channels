@@ -13,7 +13,7 @@ module App
       @colors = User.colors
       color = '#%06x' % (rand * 0xffffff)
 
-      while (@colors.include?(color) || color.scan(/\d/).map(&:to_i).min <= 5 ) do
+      while ((@colors.include?(color)) || (color.scan(/\d/).map(&:to_i).min < 5) ) do
         color = '#%06x' % (rand * 0xffffff)
       end
 
