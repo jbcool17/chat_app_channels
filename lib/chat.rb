@@ -1,12 +1,11 @@
 module App
   class Chat
 
-    def self.write_data(time, user, message, color='#D3D3D3', channel_name)
+    def self.write_data(time, message, user_id, channel_id)
       Message.create date: time,
-                      user: user,
                       message: message,
-                      color: color,
-                      channel_name: channel_name
+                      user_id: user_id,
+                      channel_id: channel_id
     end
 
     def self.get_color

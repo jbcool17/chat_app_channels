@@ -31,16 +31,21 @@ class Application < Sinatra::Base
   #--------------
   # User Enters / Chat Area - Websockets
   post '/chat/:channel/:user' do
-    User.create name: user_strong_params, color: App::Chat.get_color
-    # Channel.create name: channel_strong_params
+    if ( !User.find_by(name: user_strong_params) )
+      User.create name: user_strong_params, color: App::Chat.get_color
+    end
+    if (!Channel.find_by(name: channel_strong_params))
+      Channel.create name: channel_strong_params
+    end
 
     redirect "/chat/#{channel_strong_params}/#{user_strong_params}"
   end
 
   get '/chat/:channel/:user' do
 
-    @user = User.find_or_create_by(name: user_strong_params, color: App::Chat.get_color)
-    @channel = Channel.find_or_create_by(name: channel_strong_params).name
+    @user = User.find_by(name: user_strong_params)
+    @status_user = User.find_by(name: 'STATUS')
+    @channel = Channel.find_by(name: channel_strong_params)
     @user_color = @user.color
 
     if !request.websocket?
@@ -50,7 +55,7 @@ class Application < Sinatra::Base
     else
       request.websocket do |ws|
 
-        @con = {channel: @channel, socket: ws}
+        @con = {channel: @channel.name, socket: ws}
 
         ws.onopen do
           settings.sockets << @con
@@ -60,28 +65,27 @@ class Application < Sinatra::Base
           color = '#D3D3D3'
 
           Message.create(date: time,
-                          user: user,
                           message: message,
-                          color: color,
-                          channel_name: @channel)
+                          user_id: @status_user.id,
+                          channel_id: @channel.id)
 
           return_array = []
           settings.sockets.each do |hash|
-            if hash[:channel] == @channel
+            if hash[:channel] == @channel.name
               return_array << hash
             else
               puts "No Channel Found."
             end
           end
-
-          EM.next_tick { return_array.each { |s| s[:socket].send("#{time},#{user},#{message},#{color}") } }
+          puts "OPEN--------------------"
+          # EM.next_tick { return_array.each { |s| s[:socket].send("#{time},#{@status_user.name},#{message},#{color}") } }
         end
 
         ws.onmessage do |msg|
 
           return_array = []
           settings.sockets.each do |hash|
-            if hash[:channel] == @channel
+            if hash[:channel] == @channel.name
               return_array << hash
             else
               puts "No Channel Found."
@@ -96,10 +100,9 @@ class Application < Sinatra::Base
           if ( message != 'ping')
 
             Message.create(date: date,
-                            user: @user.name,
                             message: message,
-                            color: color,
-                            channel_name: @channel)
+                            user_id: @user.id,
+                            channel_id: @channel.id)
 
             # Rebuild a String for Sockets - (date,user,message,color)
             rebuilt_msg = [date,@user.name,message,color].join(',')
@@ -129,7 +132,7 @@ class Application < Sinatra::Base
   # GET MESSAGES via JSON
   #----------------------
   get '/messages/:channel' do
-    json Message.where(channel_name: channel_strong_params)
+    json Channel.find_by(name: channel_strong_params).messages.map {|m| {date: m.date, message: m.message, user: m.user.name, color: m.user.color }}
   end
 
   get '/messages' do

@@ -15,7 +15,9 @@ describe 'Chat Service' do
   end
 
   it 'should write to the database' do
-    test = App::Chat.write_data Time.now, "user_name", "this is a test", '#D3D3D3', "test"
+    user = User.first
+    channel = Channel.first
+    test = App::Chat.write_data Time.now, "this is a test", user.id, channel.id
 
     expect(test.message).to eq 'this is a test'
   end

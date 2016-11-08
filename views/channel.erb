@@ -71,7 +71,7 @@ $(document).ready(function(){
 
   function readAndDisplayFromDatabase() {
     $.ajax({
-      url: '/messages/' + '<%= @channel %>',
+      url: '/messages/' + '<%= @channel.name %>',
       dataType: 'json',
     }).done(function(data){
       createList(data);
