@@ -29,8 +29,20 @@ describe 'Server Service' do
     expect(last_response).to be_ok
   end
 
+  it "should get 200 for /messages/:channel" do
+    channel = Channel.first.name
+    get "/messages/#{channel}"
+    expect(last_response).to be_ok
+  end
+
   it "should get 200 for /users" do
     get '/users'
+    expect(last_response).to be_ok
+  end
+
+  it "should get 200 for /users/:user" do
+    user = User.first.name
+    get "/users/#{user}"
     expect(last_response).to be_ok
   end
 

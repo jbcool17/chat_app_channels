@@ -143,6 +143,10 @@ class Application < Sinatra::Base
     json User.all
   end
 
+  get '/users/:user' do
+    json User.find_by(name: user_strong_params).messages
+  end
+
   get '/channels' do
     json Channel.all
   end
