@@ -43,6 +43,7 @@ class Application < Sinatra::Base
 
   get '/chat/:channel/:user' do
 
+    @channels = Channel.all
     @user = User.find_by(name: user_strong_params)
     @status_user = User.find_by(name: 'STATUS')
     @channel = Channel.find_by(name: channel_strong_params)

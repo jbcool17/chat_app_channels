@@ -1,21 +1,38 @@
-  <div id="msgs"></div>
-  <h3>Hello <strong><%= @user.name %></strong>! Welcome to Websockets.</h3>
-  <div id="dump"></div>
+<h3>Hello <strong><%= @user.name %></strong>! Welcome to Websockets. </h3>
+<div id="msgs">Choose Channel: <select class="channels" name="">
+  <option value=""></option>
+  <% @channels.each do |c| %>
+    <option value="<%= c.name %>"><%= c.name %></option>
+  <% end %>
+</select></div>
+<br>
+<div id="dump"></div>
 
-  <hr>
+<hr>
 
-  <form>
-      <label for="message">MESSAGE: </label>
-      <input type="text" id="input" name="message" placeholder="send a message"></input>
-      <input id="send_message" class="btn btn-sm btn-primary" type="submit">
-      <hr>
-  </form>
+<form>
+    <label for="message">MESSAGE: </label>
+    <input type="text" id="input" name="message" placeholder="send a message"></input>
+    <input id="send_message" class="btn btn-sm btn-primary" type="submit">
+    <hr>
+</form>
 
-  <a href='/'>Go Back to Home</a>
+<a href='/'>Go Back to Home</a>
 <script>
 $(document).ready(function(){
   $('input#input').focus();
   $('input#input').select();
+  $('.channels option:contains("<%= @channel.name%>")')
+
+  $('select.channels').on('change', function(e){
+    console.log()
+    var input = e.target.value
+    if (!input){ return;}
+
+    window.location.pathname = '/chat/' + input + '/' + '<%= @user.name %>'
+    // $('ul').remove();
+    // readAndDisplayFromDatabase(input);
+  });
 
   var re = /https|http/,
       protocol = re.exec(window.location.protocol),
@@ -23,7 +40,7 @@ $(document).ready(function(){
 
   // WEBSOCKET
   var ws = new WebSocket(wsProtocol + window.location.host + window.location.pathname);
-  ws.onopen    = function()  { $('#msgs').html('CHAT-STATUS: websocket opened'); }
+  ws.onopen    = function()  { $('#msgs').append(' | CHAT-STATUS: websocket opened'); }
   ws.onclose   = function()  { $('#msgs').html('CHAT-STATUS: websocket closed'); }
   ws.onmessage = function(data) {
       var array = data.data.split(',')
@@ -40,7 +57,7 @@ $(document).ready(function(){
   };
 
   // Read CSV File first and Setup
-  readAndDisplayFromDatabase();
+  readAndDisplayFromDatabase('<%= @channel.name %>');
 
   // Setup
   $('#message').focus();
@@ -69,9 +86,9 @@ $(document).ready(function(){
       }
   }
 
-  function readAndDisplayFromDatabase() {
+  function readAndDisplayFromDatabase(channel) {
     $.ajax({
-      url: '/messages/' + '<%= @channel.name %>',
+      url: '/messages/' + channel,
       dataType: 'json',
     }).done(function(data){
       createList(data);

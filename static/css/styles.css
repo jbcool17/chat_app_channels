@@ -11,7 +11,7 @@
 
 #dump {
 	height: 300px;
-	overflow: scroll;
+	overflow: hidden;
 }
 
 /*li:nth-child(even){
