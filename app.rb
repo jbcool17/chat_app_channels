@@ -3,7 +3,6 @@ require 'sinatra/contrib'
 require 'sinatra-websocket'
 require 'sinatra/activerecord'
 require 'json'
-require 'pry'
 
 require './lib/chat'
 require './models/message'
