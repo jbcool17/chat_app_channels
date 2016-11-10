@@ -1,73 +1,67 @@
-<div class="text-center">
-  <h2>Please choose a chat type and enter a user name.</h2>
-  <p>Experimenting with different chat style applications</p>
+<div>
+  <h2>Please choose a channel and enter a user name.</h2>
+  <p>Experimenting with Websockets.</p>
   <hr>
-  <div id="content">
-    <div class="commentBox">
-      <form id="userForm" action="" method="post">
-          <h3> Choose A Chat </h3>
-            <label> USER: </label>
-              <input id="userName" type="text" placeholder="Enter user name." />
-            <label>Channel Name(select from dropdown or enter a new one): </label>
-              <select>
-                <% @channels.each do |c| %>
-                    <option value="<%= c.name %>"><%= c.name %></option>
-                <% end %>
-              </select>
-              <input id="newChannel" placeholder="add new channel" type="text">
-              <input class="btn btn-sm btn-primary" type="submit"/>
-          </form>
-    </div>
-  </div>
+  <form id="chatForm" action="" method="post">
+      <h3> Choose A Chat </h3>
+        <label> USER: </label>
+        <input id="userName" type="text" placeholder="Enter user name." />
+        <label>Channel Name(select from dropdown or enter a new one): </label>
+        <select>
+          <% @channels.each do |c| %>
+              <option value="<%= c.name %>"><%= c.name %></option>
+          <% end %>
+        </select>
 
+        <input id="newChannel" placeholder="add new channel" type="text">
+        <input type="submit"/>
+  </form>
 </div>
 
 <script>
   var appState = {
     user: '',
-    channel: '',
+    channel: $('option:selected')[0].value,
     channels: [],
     channelUrl: ''
   }
 
+// Getting Channels
   $.ajax({ url: '/channels', dataType: 'json'}).done( function(d){
     d.forEach(function(c){ appState.channels.push(c.name) })
   });
 
-
-  $('#userForm').on('submit', function(e){
+// ------------
+// UI Functions
+  $('#chatForm').on('submit', function(e){
     var user = $('#userName')[0].value.trim();
-    var url = $('#userForm').attr("action");
+    var url = $('#chatForm').attr("action");
     console.log(user)
-    if ( !user || !url ) {
-      alert('Please Enter a User Name!')
+    if ( !user || !url || !appState.channel ) {
+      alert('Please Enter a User Name or Channel!')
       return false;
     }
-
   });
 
   $('input#userName').keyup(function(e){
     appState.user = e.target.value;
-    appState.channel = $('option:selected')[0].value;
-
+    // appState.channel = $('option:selected')[0].value;
     getPostUrl( appState.channel, appState.user)
   })
 
   $('select').change(function(e){
     appState.channel = e.target.value;
     getPostUrl( appState.channel, appState.user)
-
   });
 
   $('#newChannel').keyup(function(e){
     appState.channel = e.target.value;
     getPostUrl( appState.channel, appState.user)
-
   });
 
   function getPostUrl(channel, user){
       appState.channelUrl = "/chat/" + channel + '/' + user;
-      $('#userForm').attr("action", appState.channelUrl);
+      $('#chatForm').attr("action", appState.channelUrl);
       console.log(appState.channelUrl);
   }
 

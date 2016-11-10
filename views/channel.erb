@@ -1,23 +1,32 @@
 <h3>Hello <strong><%= @user.name %></strong>! Welcome to Websockets. </h3>
-<div id="msgs">Choose Channel: <select class="channels" name="">
-  <option value=""></option>
-  <% @channels.each do |c| %>
-    <option value="<%= c.name %>"><%= c.name %></option>
-  <% end %>
-</select></div>
-<br>
+
+<div>
+  <div id="chooseChannel">
+    Choose Channel:
+      <select class="channels" name="">
+        <option value=""></option>
+        <% @channels.each do |c| %>
+          <option value="<%= c.name %>"><%= c.name %></option>
+        <% end %>
+      </select>
+  </div>
+  <div id="socketStatus"></div>
+</div>
+
 <div id="dump"></div>
 
 <hr>
 
-<form>
-    <label for="message">MESSAGE: </label>
-    <input type="text" id="input" name="message" placeholder="send a message"></input>
-    <input id="send_message" class="btn btn-sm btn-primary" type="submit">
-    <hr>
-</form>
-
+<div id="chatInput">
+  <form>
+      <label for="message">MESSAGE: </label>
+      <input type="text" id="input" name="message" placeholder="send a message"></input>
+      <input id="send_message" class="btn btn-sm btn-primary" type="submit">
+  </form>
+</div>
+<hr>
 <a href='/'>Go Back to Home</a>
+
 <script>
 $(document).ready(function(){
   $('input#input').focus();
@@ -30,8 +39,6 @@ $(document).ready(function(){
     if (!input){ return;}
 
     window.location.pathname = '/chat/' + input + '/' + '<%= @user.name %>'
-    // $('ul').remove();
-    // readAndDisplayFromDatabase(input);
   });
 
   var re = /https|http/,
@@ -40,26 +47,24 @@ $(document).ready(function(){
 
   // WEBSOCKET
   var ws = new WebSocket(wsProtocol + window.location.host + window.location.pathname);
-  ws.onopen    = function()  { $('#msgs').append(' | CHAT-STATUS: websocket opened'); }
-  ws.onclose   = function()  { $('#msgs').html('CHAT-STATUS: websocket closed'); }
+  ws.onopen    = function()  { $('#socketStatus').append('CHAT-STATUS: websocket opened'); }
+  ws.onclose   = function()  { $('#socketStatus').html('CHAT-STATUS: websocket closed'); }
   ws.onmessage = function(data) {
       var array = data.data.split(',')
       var row = {date: array[0], user: array[1], message: array[2], color: array[3]}
       console.log(row)
 
       if ( row.user === "STATUS") {
-        $('#dump > ul > li:last-child').after(createLI(row, '#FF4000'));
+        $('#dump > ul > li:last-child').after(createLI(row));
       } else {
-        $('#dump > ul > li:last-child').after(createLI(row, "green"));
+        $('#dump > ul > li:last-child').after(createLI(row));
       }
       console.log('on message run...')
       autoScroll();
   };
 
-  // Read CSV File first and Setup
+  // Initial Setup
   readAndDisplayFromDatabase('<%= @channel.name %>');
-
-  // Setup
   $('#message').focus();
   $('#message').select();
 
@@ -86,6 +91,7 @@ $(document).ready(function(){
       }
   }
 
+// Handle Data / Generate HTML - Functions
   function readAndDisplayFromDatabase(channel) {
     $.ajax({
       url: '/messages/' + channel,
@@ -98,14 +104,14 @@ $(document).ready(function(){
 
   function createList(data){
     var allRows = data;
-    var list = '<ul id="msgs" class="chat-window list-group">';
+    var list = '<ul id="chatWindow">';
     for (var i = 0; i < allRows.length; i++){
       var row = allRows[i]
 
       if ( row.user === "STATUS") {
-        list += createLI(row, '#D3D3D3')
+        list += createLI(row)
       } else {
-        list += createLI(row, 'green')
+        list += createLI(row)
       }
     }
 
@@ -114,14 +120,14 @@ $(document).ready(function(){
     $('#dump').append(list)
   }
 
-  function createLI(row, style){
+  function createLI(row){
     var date = new Date(row.date).toString().split('GMT');
 
     return '<li style="background-color:' + row.color + '">' + date[0] + ' | ' + row.user + ' : ' + row.message + '</li>'
   }
 
   function autoScroll(){
-    $("ul#msgs").animate({ scrollTop: $("ul#msgs")[0].scrollHeight }, "slow");
+    $("ul#chatWindow").animate({ scrollTop: $("ul#chatWindow")[0].scrollHeight }, "slow");
   }
 
   function postAndUpdate(text) {
@@ -132,7 +138,7 @@ $(document).ready(function(){
     ws.send([data.date,data.user,data.message,data.color].join(','));
   }
 
-  // PING - Keeps Websocket Alive - 60sec
+  // PING - Keeps Websocket Alive - 60sec - Doesn't Work on HEROKU
   setInterval(function(){
     console.log('ping')
     ws.send('ping,ping,ping,ping');

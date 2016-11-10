@@ -1,52 +1,102 @@
-.chat-window {
-	height: 300px;
-	overflow: scroll;
-	background: rgb(250,250,250);
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+body {
+	font-family: 'Open-Sans', sans-serif;
+	font-size: 14px;
 }
 
-.chat-window li {
-	margin-bottom: 2px;
-	padding: 5px;
+.container {
+	max-width: 800px;
+	margin: 0 auto;
+}
+/*------------*/
+/*HOME PAGE*/
+/*------------*/
+
+form#chatWindow {
+
 }
 
+#chatForm input,
+#chatForm select,
+#chatForm textarea {
+		margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 10px;
+		border-radius: 10px;
+}
+#chatForm label {
+	display: block;
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+#chatForm select {
+	width: 200px;
+}
+#chatForm input[type='text'] {
+	width: 200px;
+	-moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#chatForm input[type='submit'] {
+	display: block;
+	width: 200px;
+	background-color: #00cc66;
+	-moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/*------------*/
+/*CHANNEL*/
+/*------------*/
 #dump {
 	height: 300px;
 	overflow: hidden;
 }
 
-/*li:nth-child(even){
-	background-color: lightblue;
-}
-
-tr:nth-child(even){
-	background-color: lightblue;
-}*/
-
-.red {
-	background-color: rgba(255, 0, 75, .5);
-}
-.green:nth-child(even) {
-	background-color: rgba(0,255,100,.5);
-}
-.green:nth-child(odd){
-	background-color: rgba(0,255,200,.5);
-}
-
-.flash {
-	color: red;
-	padding: 10px;
-
-}
-
-.commentList {
-	height: 200px;
+#chatWindow {
+	height: 300px;
+	margin-left: -40px;
 	overflow: scroll;
+	background: rgb(250,250,250);
 }
 
-input.btn.btn-sm.btn-primary {
-	margin-left: 10px;
+#chatWindow li {
+	margin-bottom: 2px;
+	padding: 5px;
+	list-style: none;
 }
-label {
-	margin-right: 10px;
-  margin-left: 10px;
+
+
+#chatInput input,
+#chooseChannel select,
+#chatInput textarea {
+		margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 5px;
+}
+#chatInput label. #chooseChannel label {
+	margin-bottom: 5px;
+	font-size: 1.8em;
+  vertical-align: middle;
+}
+#chooseChannel select {
+	width: 200px;
+}
+#chatInput input[type='text'] {
+	width: 300px;
+	-moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#chatInput input[type='submit'] {
+	width: 100px;
+	background-color: #00cc66;
+	-moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
