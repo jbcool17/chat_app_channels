@@ -1,5 +1,6 @@
 # Chat App
 - Websockets/Channels
+- Join/Create a User & Channel
 
 ## RUN
 ```
@@ -14,6 +15,8 @@ $ rackup
 - ruby 2.3.0
 - sintra
 - postgres - production / sqlite3 - development
+- custom styles
+
 
 ### Testing
 - using rspec 
@@ -26,3 +29,7 @@ $ bundle exec guard
 # Also setup with foreman
 $ foreman start
 ```
+
+# Hosting
+- [Online Here](https://intense-temple-95153.herokuapp.com/)
+- Bug occuers on Channel Switch in Chat VIew(looking into)
