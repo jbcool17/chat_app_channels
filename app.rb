@@ -30,6 +30,7 @@ class Application < Sinatra::Base
   #--------------
   # User Enters / Chat Area - Websockets
   post '/chat/:channel/:user' do
+
     if ( !User.find_by(name: user_strong_params) )
       User.create name: user_strong_params, color: App::Chat.get_color
     end
@@ -124,11 +125,8 @@ class Application < Sinatra::Base
   # GET MESSAGES via JSON
   #----------------------
   get '/messages/:channel' do
-    channel_messages =  Channel.find_by(name: channel_strong_params).messages.map do |m|
-      {date: m.date, message: m.message, user: m.user.name, color: m.user.color }
-    end
 
-    json channel_messages
+    json Channel.get_messages_for_channel(channel_strong_params)
   end
 
   get '/messages' do
