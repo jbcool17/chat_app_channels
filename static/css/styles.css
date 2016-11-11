@@ -11,7 +11,7 @@ body {
 }
 
 /*------------*/
-/*HOME PAGE*/
+/*--HOME PAGE-*/
 /*------------*/
 
 form#chatWindow {
@@ -51,7 +51,7 @@ form#chatWindow {
 }
 
 /*------------*/
-/*CHANNEL*/
+/*---CHANNEL--*/
 /*------------*/
 #dump {
 	height: 310px;

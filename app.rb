@@ -125,7 +125,6 @@ class Application < Sinatra::Base
   # GET MESSAGES via JSON
   #----------------------
   get '/messages/:channel' do
-
     json Channel.get_messages_for_channel(channel_strong_params)
   end
 
