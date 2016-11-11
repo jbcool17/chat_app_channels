@@ -3,16 +3,21 @@ ruby '2.3.0'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'rake'
+
+# Sockets
 gem 'sinatra-websocket'
 gem 'faye'
-gem 'pry', :group => :development
 
+# DATABASE
 gem 'sinatra-activerecord'
-gem 'sqlite3', :group => :development
-gem 'rake'
+gem 'activesupport'
 gem 'pg'
 
-gem 'activesupport'
+group :development do
+  gem 'sqlite3'
+  gem 'pry'
+end
 
 group :test do
   gem 'rspec'
