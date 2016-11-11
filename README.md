@@ -32,4 +32,4 @@ $ foreman start
 
 # Hosting
 - [Online Here](https://intense-temple-95153.herokuapp.com/)
-- Bug occuers on Channel Switch in Chat VIew(looking into)
+- Bug occurs on Channel Switch in Chat VIew(looking into)
