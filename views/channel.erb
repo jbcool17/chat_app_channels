@@ -1,14 +1,16 @@
-<h3>Hello <strong><%= @user.name %></strong>! Welcome to Websockets. </h3>
+<p style="font-size: 1.5em;">Hello <strong><%= @user.name %></strong>, Welcome to <%= @channel.name %>! </p>
 
 <div>
   <div id="chooseChannel">
     Choose Channel:
+    <form id="channelForm" action='/chat/input/<%= @user.name %>' method="post">
       <select class="channels" name="">
         <option value=""></option>
         <% @channels.each do |c| %>
           <option value="<%= c.name %>"><%= c.name %></option>
         <% end %>
       </select>
+    </form>
   </div>
   <div id="socketStatus"></div>
 </div>
@@ -40,7 +42,10 @@ $(document).ready(function(){
     var input = e.target.value
     if (!input){ return;}
 
-    window.location.pathname = '/chat/' + input + '/' + '<%= @user.name %>'
+    $('#channelForm').attr('action', '/chat/' + input + '/' + '<%= @user.name %>')
+
+    $('#channelForm').submit();
+
   });
 
   var re = /https|http/,
