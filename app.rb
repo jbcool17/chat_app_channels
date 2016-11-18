@@ -2,6 +2,8 @@ require 'sinatra'
 require 'sinatra/contrib'
 require 'sinatra-websocket'
 require 'sinatra/activerecord'
+require "sinatra/reloader"
+
 require 'json'
 
 require './lib/chat'
@@ -10,7 +12,11 @@ require './models/user'
 require './models/channel'
 
 class Application < Sinatra::Base
+  configure :development do
+    register Sinatra::Reloader
+  end
   register Sinatra::ActiveRecordExtension
+
   set :server, 'thin'
   set :sockets, []
   set :public_folder, File.dirname(__FILE__) + '/static'
