@@ -1,20 +1,20 @@
-<p style="font-size: 1.5em;">Hello <strong><%= @user.name %></strong>, Welcome to <%= @channel.name %>! </p>
+<p style="font-size: 1.5em;">Hello <strong style="background-color: <%= @user.color %>"><%= @user.name %></strong>, Welcome to <%= @channel.name %>! </p>
 
 <div>
   <div id="chooseChannel">
-    Choose Channel:
     <form id="channelForm" action='/chat/input/<%= @user.name %>' method="post">
       <select class="channels" name="">
-        <option value=""></option>
+        <option value="">Switch Channel</option>
         <% @channels.each do |c| %>
           <option value="<%= c.name %>"><%= c.name %></option>
         <% end %>
       </select>
     </form>
   </div>
+
   <div id="socketStatus"></div>
 </div>
-
+<hr>
 <div id="dump"></div>
 
 <hr>

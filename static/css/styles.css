@@ -3,11 +3,23 @@
 body {
 	font-family: 'Open-Sans', sans-serif;
 	font-size: 14px;
+  margin: 0;
+  padding: 0;
 }
 
 .container {
 	max-width: 800px;
 	margin: 0 auto;
+  max-width: 800px;
+  margin: 0 auto;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+footer {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
 }
 
 /*------------*/
@@ -26,6 +38,7 @@ form#chatWindow {
     font-weight: 400;
     padding: 10px;
 		border-radius: 10px;
+    border: 2px solid black;
 }
 #chatForm label {
 	display: block;
@@ -34,6 +47,7 @@ form#chatWindow {
 }
 #chatForm select {
 	width: 200px;
+  height: 40px;
 }
 #chatForm input[type='text'] {
 	width: 200px;
@@ -48,11 +62,15 @@ form#chatWindow {
 	-moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  border: 0;
 }
 
 /*------------*/
 /*---CHANNEL--*/
 /*------------*/
+#channelForm {
+  margin-bottom: 10px;
+}
 #dump {
 	height: 310px;
 	overflow: hidden;
@@ -75,7 +93,7 @@ form#chatWindow {
 #chatInput input,
 #chooseChannel select,
 #chatInput textarea {
-		margin-bottom: 15px;
+		margin-bottom: 0px;
     font-size: 16px;
     font-weight: 400;
     padding: 5px;
@@ -89,7 +107,7 @@ form#chatWindow {
 	width: 200px;
 }
 #chatInput input[type='text'] {
-	width: 300px;
+	width: 618px;
 	-moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -100,4 +118,6 @@ form#chatWindow {
 	-moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  border: 0;
+  height: 30px;
 }
