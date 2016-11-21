@@ -4,6 +4,7 @@ ruby '2.3.0'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'rake'
+gem 'faker'
 
 # Sockets
 gem 'sinatra-websocket'
