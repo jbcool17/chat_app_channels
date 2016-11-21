@@ -64,7 +64,7 @@ class Application < Sinatra::Base
       request.websocket do |ws|
 
         @con = {channel: @channel.name, socket: ws}
-
+      # OPEN
         ws.onopen do
           settings.sockets << @con
           time = Time.now
@@ -83,8 +83,11 @@ class Application < Sinatra::Base
               puts "No Channel Found."
             end
           end
-        end
 
+          rebuilt_msg = [time,@status_user.name,message,@status_user.color].join(',')
+          EM.next_tick { return_array.each{|s| s[:socket].send(rebuilt_msg) } }
+        end
+      # ON MESSAGE
         ws.onmessage do |msg|
 
           return_array = []
@@ -109,14 +112,28 @@ class Application < Sinatra::Base
             EM.next_tick { return_array.each{|s| s[:socket].send(rebuilt_msg) } }
           end
         end
-
+      # ON CLOSE
         ws.onclose do
           warn("websocket #{ws.request['path']} closed...")
+          return_array = []
+
+          settings.sockets.each do |hash|
+            if hash[:channel] == @channel.name
+              return_array << hash
+            else
+              puts "No Channel Found."
+            end
+          end
 
           settings.sockets.each do |hash|
             if hash[:socket] == ws
               settings.sockets.delete(hash)
               puts "#{hash[:socket].request['path']} - deleted"
+
+              # Rebuild a String for Sockets - (date,user,message,color)
+              rebuilt_msg = [Time.now,"STATUS","#{@user.name.upcase} HAS LEFT THE CHANNEL",@status_user.color].join(',')
+
+              EM.next_tick { return_array.each{|s| s[:socket].send(rebuilt_msg) } }
             else
               puts "#{hash[:socket].request['path']} - not deleted"
             end
