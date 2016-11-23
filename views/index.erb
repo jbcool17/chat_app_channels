@@ -4,10 +4,12 @@
   <hr>
   <form id="chatForm" action="" method="post">
       <h3> Choose A Chat </h3>
+      <p id='info'></p>
         <label> USER: </label>
         <input id="userName" type="text" placeholder="Enter user name." />
         <label>Channel Name(select from dropdown or enter a new one): </label>
         <select>
+              <option value="">Select a Channel</option>
           <% @channels.each do |c| %>
               <option value="<%= c.name %>"><%= c.name %></option>
           <% end %>
@@ -15,6 +17,8 @@
         <input id="newChannel" placeholder="add new channel" type="text">
         <input type="submit"/>
   </form>
+
+
 </div>
 
 <script>
@@ -36,7 +40,7 @@
     var user = $('#userName')[0].value.trim();
     var url = $('#chatForm').attr("action");
     console.log(user)
-    if ( !user || !url || !appState.channel ) {
+    if ( !user || !url || appState.channel.length === 0 ) {
       alert('Please Enter a User Name or Channel!')
       return false;
     }
@@ -44,7 +48,6 @@
 
   $('input#userName').keyup(function(e){
     appState.user = e.target.value;
-    // appState.channel = $('option:selected')[0].value;
     getPostUrl( appState.channel, appState.user)
   })
 
@@ -55,13 +58,17 @@
 
   $('#newChannel').keyup(function(e){
     appState.channel = e.target.value;
-    getPostUrl( appState.channel, appState.user)
+    getPostUrl(appState.channel, appState.user)
   });
 
   function getPostUrl(channel, user){
       appState.channelUrl = "/chat/" + channel + '/' + user;
       $('#chatForm').attr("action", appState.channelUrl);
-      console.log(appState.channelUrl);
+      $('#info').html("Your user name will be: <strong>" +
+                      user + "</strong> in the channel: <strong>" +
+                      channel + "</strong>");
+
+      console.log("Your user name will be: " + user + " in the channel: " + channel);
   }
 
 </script>
