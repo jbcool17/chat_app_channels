@@ -105,12 +105,13 @@ class Application < Sinatra::Base
 
           if ( message != 'ping')
             App::Chat.write_data(date,message,@user.id,@channel.id)
+          end
 
             # Rebuild a String for Sockets - (date,user,message,color)
             rebuilt_msg = [date,@user.name,message,@user_color].join(',')
 
             EM.next_tick { return_array.each{|s| s[:socket].send(rebuilt_msg) } }
-          end
+          # end
         end
       # ON CLOSE
         ws.onclose do
