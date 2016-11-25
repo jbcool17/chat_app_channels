@@ -57,16 +57,13 @@ $(document).ready(function(){
   ws.onopen    = function()  { $('#socketStatus').append('CHAT-STATUS: websocket opened'); }
   ws.onclose   = function()  { $('#socketStatus').html('CHAT-STATUS: websocket closed'); }
   ws.onmessage = function(data) {
-      var array = data.data.split(',')
-      var row = {date: array[0], user: array[1], message: array[2], color: array[3]}
-      console.log(row)
+      var dataArray = data.data.split(',')
+      var row = {date: dataArray[0], user: dataArray[1], message: dataArray[2], color: dataArray[3]}
 
-      if ( row.user === "STATUS") {
-        $('#dump > ul > li:last-child').after(createLI(row));
-      } else {
+      if ( row.message !== "ping") {
         $('#dump > ul > li:last-child').after(createLI(row));
       }
-      console.log('on message run...')
+
       autoScroll();
   };
 
