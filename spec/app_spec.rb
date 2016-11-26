@@ -1,5 +1,6 @@
 require_relative '../app.rb'
 require 'rspec'
+require 'open-uri'
 require 'rack/test'
 require 'json'
 
@@ -30,7 +31,8 @@ describe 'Server Service' do
   end
 
   it "should get 200 for /messages/:channel" do
-    channel = Channel.first.name
+    channel = URI::encode(Channel.first.name).strip
+
     get "/messages/#{channel}"
     expect(last_response).to be_ok
   end

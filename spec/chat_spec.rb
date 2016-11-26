@@ -8,12 +8,6 @@ require 'json'
 describe 'Chat Service' do
   include Rack::Test::Methods
 
-  it 'should get a hex color value' do
-    color = App::Chat.get_color
-    color.slice!(0)
-    expect(!color[/\H/]).to eq true
-  end
-
   it 'should write to the database' do
     user = User.first
     channel = Channel.first
