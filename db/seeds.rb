@@ -8,9 +8,9 @@ Channel.destroy_all
 status_user = User.create(name: 'STATUS', color: '#D3D3D3')
 
 10.times do
-  user1 = User.create name: Faker::Name.first_name, color: '#5bacff'
-  user2 = User.create name: Faker::Name.first_name, color: '#5bac44'
-  user3 = User.create name: Faker::Name.first_name, color: '#ffac55'
+  user1 = User.create name: Faker::Name.first_name
+  user2 = User.create name: Faker::Name.first_name
+  user3 = User.create name: Faker::Name.first_name
 
   channel1 = Channel.create name: Faker::Beer.name
 
