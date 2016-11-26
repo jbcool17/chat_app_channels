@@ -7,9 +7,7 @@ require "sinatra/reloader"
 require 'json'
 
 require './lib/chat'
-require './models/message'
-require './models/user'
-require './models/channel'
+Dir["./models/*.rb"].each {|file| require file }
 
 class Application < Sinatra::Base
   configure :development do
@@ -37,12 +35,8 @@ class Application < Sinatra::Base
   # User Enters / Chat Area - Websockets
   post '/chat/:channel/:user' do
 
-    if ( !User.find_by(name: user_strong_params) )
-      User.create name: user_strong_params, color: App::Chat.get_color
-    end
-    if (!Channel.find_by(name: channel_strong_params))
-      Channel.create name: channel_strong_params
-    end
+    User.find_or_create_by(name: user_strong_params)
+    Channel.find_or_create_by(name: channel_strong_params)
 
     redirect "/chat/#{channel_strong_params}/#{user_strong_params}"
   end
@@ -50,9 +44,8 @@ class Application < Sinatra::Base
   get '/chat/:channel/:user' do
 
     @user = User.find_by(name: user_strong_params)
-    @user_color = @user.color
     @status_user = User.find_by(name: 'STATUS')
-    @channel = Channel.find_by(name: channel_strong_params)
+    @current_channel = Channel.find_by(name: channel_strong_params)
     @channels = Channel.all
 
 
@@ -63,7 +56,7 @@ class Application < Sinatra::Base
     else
       request.websocket do |ws|
 
-        @con = {channel: @channel.name, socket: ws}
+        @con = {channel: @current_channel.name, socket: ws}
       # OPEN
         ws.onopen do
           settings.sockets << @con
@@ -73,11 +66,11 @@ class Application < Sinatra::Base
           App::Chat.write_data(time,
                                 message,
                                 @status_user.id,
-                                @channel.id)
+                                @current_channel.id)
 
           return_array = []
           settings.sockets.each do |hash|
-            if hash[:channel] == @channel.name
+            if hash[:channel] == @current_channel.name
               return_array << hash
             else
               puts "[#{Time.now}] - No Channel Found."
@@ -92,7 +85,7 @@ class Application < Sinatra::Base
 
           return_array = []
           settings.sockets.each do |hash|
-            if hash[:channel] == @channel.name
+            if hash[:channel] == @current_channel.name
               return_array << hash
             else
               puts "[#{Time.now}] - No Channel Found."
@@ -104,11 +97,11 @@ class Application < Sinatra::Base
           message = html_safe(msg.split(',')[2]).strip
 
           if ( message != 'ping')
-            App::Chat.write_data(date,message,@user.id,@channel.id)
+            App::Chat.write_data(date,message,@user.id,@current_channel.id)
           end
 
             # Rebuild a String for Sockets - (date,user,message,color)
-            rebuilt_msg = [date,@user.name,message,@user_color].join(',')
+            rebuilt_msg = [date,@user.name,message,@user.color].join(',')
 
             EM.next_tick { return_array.each{|s| s[:socket].send(rebuilt_msg) } }
           # end
@@ -119,7 +112,7 @@ class Application < Sinatra::Base
           return_array = []
 
           settings.sockets.each do |hash|
-            if hash[:channel] == @channel.name
+            if hash[:channel] == @current_channel.name
               return_array << hash
             else
               puts "[#{Time.now}] - No Channel Found."
@@ -132,7 +125,7 @@ class Application < Sinatra::Base
               puts "[#{Time.now}] - #{hash[:socket].request['path']} - deleted"
 
               App::Chat.write_data(Time.now,"#{@user.name.upcase} HAS LEFT THE CHANNEL",
-                                    @status_user.id,@channel.id)
+                                    @status_user.id,@current_channel.id)
 
               # Rebuild a String for Sockets - (date,user,message,color)
               rebuilt_msg = [Time.now,"STATUS","#{@user.name.upcase} HAS LEFT THE CHANNEL",@status_user.color].join(',')
