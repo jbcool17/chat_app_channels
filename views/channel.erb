@@ -1,4 +1,4 @@
-<p style="font-size: 1.5em;">Hello <strong style="background-color: <%= @user.color %>"><%= @user.name %></strong>, Welcome to <%= @channel.name %>! </p>
+<p style="font-size: 1.5em;">Hello <strong style="background-color: <%= @user.color %>"><%= @user.name %></strong>, Welcome to <%= @current_channel.name %>! </p>
 
 <div>
   <div id="chooseChannel">
@@ -35,7 +35,7 @@
 $(document).ready(function(){
   $('input#input').focus();
   $('input#input').select();
-  $('.channels option:contains("<%= @channel.name%>")')
+  $('.channels option:contains("<%= @current_channel.name%>")')
 
   $('select.channels').on('change', function(e){
     console.log()
@@ -68,7 +68,7 @@ $(document).ready(function(){
   };
 
   // Initial Setup
-  readAndDisplayFromDatabase('<%= @channel.name %>');
+  readAndDisplayFromDatabase('<%= @current_channel.name %>');
   $('#message').focus();
   $('#message').select();
 
