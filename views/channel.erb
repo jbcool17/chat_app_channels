@@ -62,9 +62,10 @@ $(document).ready(function(){
 
       if ( row.message !== "ping") {
         $('#dump > ul > li:last-child').after(createLI(row));
+        autoScroll();
       }
 
-      autoScroll();
+
   };
 
   // Initial Setup
