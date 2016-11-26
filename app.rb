@@ -80,7 +80,7 @@ class Application < Sinatra::Base
             if hash[:channel] == @channel.name
               return_array << hash
             else
-              puts "No Channel Found."
+              puts "[#{Time.now}] - No Channel Found."
             end
           end
 
@@ -95,7 +95,7 @@ class Application < Sinatra::Base
             if hash[:channel] == @channel.name
               return_array << hash
             else
-              puts "No Channel Found."
+              puts "[#{Time.now}] - No Channel Found."
             end
           end
 
@@ -122,21 +122,24 @@ class Application < Sinatra::Base
             if hash[:channel] == @channel.name
               return_array << hash
             else
-              puts "No Channel Found."
+              puts "[#{Time.now}] - No Channel Found."
             end
           end
 
           settings.sockets.each do |hash|
             if hash[:socket] == ws
               settings.sockets.delete(hash)
-              puts "#{hash[:socket].request['path']} - deleted"
+              puts "[#{Time.now}] - #{hash[:socket].request['path']} - deleted"
+
+              App::Chat.write_data(Time.now,"#{@user.name.upcase} HAS LEFT THE CHANNEL",
+                                    @status_user.id,@channel.id)
 
               # Rebuild a String for Sockets - (date,user,message,color)
               rebuilt_msg = [Time.now,"STATUS","#{@user.name.upcase} HAS LEFT THE CHANNEL",@status_user.color].join(',')
 
               EM.next_tick { return_array.each{|s| s[:socket].send(rebuilt_msg) } }
             else
-              puts "#{hash[:socket].request['path']} - not deleted"
+              puts "[#{Time.now}] - #{hash[:socket].request['path']} - not deleted"
             end
           end
 
