@@ -12,7 +12,7 @@ status_user = User.create(name: 'STATUS', color: '#D3D3D3')
   user2 = User.create name: Faker::Name.first_name
   user3 = User.create name: Faker::Name.first_name
 
-  channel1 = Channel.create name: Faker::Beer.name
+  channel1 = Channel.create name: Faker::Beer.name.strip
 
   Message.create :date => Time.now, :message => "#{user1.name} HAS JOINED THE CHANNEL.", user_id: status_user.id, channel_id: channel1.id
   Message.create :date => Time.now, :message => "#{user2.name} HAS JOINED THE CHANNEL.", user_id: status_user.id, channel_id: channel1.id
@@ -38,6 +38,9 @@ status_user = User.create(name: 'STATUS', color: '#D3D3D3')
   Message.create :date => Time.now, :message => Faker::Hipster.sentence, user_id: user2.id, channel_id: channel1.id
   Message.create :date => Time.now, :message => Faker::Hipster.sentence, user_id: user3.id, channel_id: channel1.id
 end
+
+Channel.create name: "Hockey"
+Channel.create name: "Soccer"
 
 puts "========================="
 puts "Database has been seeded."
