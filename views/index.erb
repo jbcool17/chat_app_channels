@@ -7,7 +7,7 @@
       <p id='info'></p>
         <label> USER: </label>
         <input id="userName" type="text" placeholder="Enter user name." />
-        <label>Channel Name(select from dropdown or enter a new one): </label>
+        <label>Channel Name(select from dropdown): </label>
         <select>
               <option value="">Select a Channel</option>
           <% @channels.each do |c| %>
@@ -22,6 +22,8 @@
 </div>
 
 <script>
+  $('#newChannel').hide();
+
   var appState = {
     user: '',
     channel: $('option:selected')[0].value,
