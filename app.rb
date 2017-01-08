@@ -13,7 +13,7 @@ class Application < Sinatra::Base
   configure :development do
     register Sinatra::Reloader
   end
-  
+
   register Sinatra::ActiveRecordExtension
 
   set :server, 'thin'
@@ -36,8 +36,13 @@ class Application < Sinatra::Base
   # User Enters / Chat Area - Websockets
   post '/chat/:channel/:user' do
 
-    User.find_or_create_by(name: user_strong_params)
-    Channel.find_or_create_by(name: channel_strong_params)
+    user = User.find_or_create_by(name: user_strong_params)
+    channel = Channel.find_or_create_by(name: channel_strong_params)
+
+    App::Chat.write_data(Time.now,
+                          "#{user.name.upcase} HAS CREATED CHANNEL: #{channel.name.upcase}",
+                          user.id,
+                          channel.id)
 
     redirect "/chat/#{channel_strong_params}/#{user_strong_params}"
   end
