@@ -39,8 +39,12 @@ status_user = User.create(name: 'STATUS', color: '#D3D3D3')
   Message.create :date => Time.now, :message => Faker::Hipster.sentence, user_id: user3.id, channel_id: channel1.id
 end
 
-Channel.create name: "Hockey"
-Channel.create name: "Soccer"
+hockey = Channel.create name: "Hockey"
+Message.create :date => Time.now, :message => Faker::Hipster.sentence, user_id: User.first.id, channel_id: hockey.id
+Message.create :date => Time.now, :message => Faker::Hipster.sentence, user_id: User.first.id, channel_id: hockey.id
+soccer = Channel.create name: "Soccer"
+Message.create :date => Time.now, :message => Faker::Hipster.sentence, user_id: User.first.id, channel_id: soccer.id
+Message.create :date => Time.now, :message => Faker::Hipster.sentence, user_id: User.first.id, channel_id: soccer.id
 
 puts "========================="
 puts "Database has been seeded."
