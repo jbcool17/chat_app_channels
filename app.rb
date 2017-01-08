@@ -41,7 +41,7 @@ class Application < Sinatra::Base
 
     App::Chat.write_data(Time.now,
                           "#{user.name.upcase} HAS CREATED CHANNEL: #{channel.name.upcase}",
-                          user.id,
+                          User.find_by(name: 'STATUS').id,
                           channel.id)
 
     redirect "/chat/#{channel_strong_params}/#{user_strong_params}"
