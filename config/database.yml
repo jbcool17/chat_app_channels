@@ -10,5 +10,10 @@ test:
   pool: 5
   timeout: 5000
 
+staging:
+  adapter: sqlite3
+  database: db/cac.sqlite3
+  pool: 5
+  timeout: 5000
 production:
   url: <%= ENV['DATABASE_URL'] %>
