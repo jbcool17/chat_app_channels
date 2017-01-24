@@ -14,10 +14,15 @@ gem 'faye'
 gem 'sinatra-activerecord'
 gem 'activesupport'
 gem 'pg'
+gem 'sqlite3'
 
 group :development do
   gem 'sqlite3'
   gem 'pry'
+  gem "capistrano"
+  gem "capistrano-bundler"
+  gem "capistrano-passenger"
+  gem 'capistrano-rvm'
 end
 
 group :test do
