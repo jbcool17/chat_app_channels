@@ -1,3 +1,5 @@
+require './lib/chat'
+
 class Channel < ActiveRecord::Base
   has_many :messages, dependent: :destroy
   has_many :users, through: :messages

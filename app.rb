@@ -37,12 +37,16 @@ class Application < Sinatra::Base
   post '/chat/:channel/:user' do
 
     user = User.find_or_create_by(name: user_strong_params)
-    channel = Channel.find_or_create_by(name: channel_strong_params)
+    if (Channel.where(name: channel_strong_params).blank?)
+        channel = Channel.create(name: channel_strong_params)
+        App::Chat.write_data(Time.now,
+                            "#{user.name.upcase} HAS CREATED CHANNEL: #{channel.name.upcase}",
+                            User.find_by(name: 'STATUS').id,
+                            channel.id)
 
-    App::Chat.write_data(Time.now,
-                          "#{user.name.upcase} HAS CREATED CHANNEL: #{channel.name.upcase}",
-                          User.find_by(name: 'STATUS').id,
-                          channel.id)
+    end
+
+
 
     redirect "/chat/#{channel_strong_params}/#{user_strong_params}"
   end
